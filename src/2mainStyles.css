@@ -1,0 +1,40 @@
+/* Set full height on root elements */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+ 
+  .wrapper {
+    height: 100vh; /* Full height of the viewport */
+    width: 100vw; /* Full width of the viewport */
+    padding: 1vh 1vw; /* 1% padding around the edges */
+    box-sizing: border-box; /* Includes padding in the total size */
+  }
+ 
+  .container {
+    display: flex;
+    height: 100%; /* Full height of the wrapper */
+    gap: 0.7%; /* 1% gap between the boxes */
+    box-sizing: border-box;
+  }
+ 
+  .initiative-list {
+    width: 39%; /* Adjusted to account for the gap */
+    height: 100%; /* Full height of the container */
+    padding: 0; /* Ensure no extra padding */
+    margin: 0; /* Ensure no extra margin */
+    box-sizing: border-box; /* Include padding and borders in size calculations */
+  }
+ 
+  .conditions-list {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border-radius: 10px;
+    background-color: blue;
+    width: 39%; /* Adjusted to account for the gap */
+  }
+

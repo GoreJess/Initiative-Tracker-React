@@ -1,0 +1,281 @@
+.initiative-list {
+    background-color: darkslategray;
+    display: grid; /* Use grid layout */
+    grid-template-rows: repeat(11, 1fr); /* Divide into 11 equal rows */
+    height: 100%; /* Full height of the container */
+    width: 39%; /* Full width of the container */
+    box-sizing: border-box; /* Include padding and borders in size calculations */
+    margin: 0; /* Remove any default margin */
+    padding: 0; /* Remove any default padding */
+    border-radius: 10px; /* Add rounded corners */
+  }
+
+
+  .initiative-banner {
+    background-color: darkred;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    height: 100%;
+    display: flex; /* Use Flexbox layout */
+    align-items: center; /* Center content vertically */
+    justify-content: space-between; /* Distribute space between columns */
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    color: white;
+  }
+
+  .round-counter {
+    flex: 0 0 20%; /* Take up 20% of the width */
+    height: 100%; /* Ensure it fills its container */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: larger;
+  }
+ 
+  .initiative-title {
+    flex: 0 0 55%; /* Take up 40% of the width */
+    height: 100%; /* Ensure it fills its container */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: x-large;
+  }
+ 
+  .next-back {
+    flex: 0 0 25%; /* Take up 20% of the width */
+    height: 100%; /* Ensure it fills its container */
+    display: flex;
+    align-items: center;
+    justify-content: space-around; /* Space out the buttons */
+  }
+ 
+  .back-button {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 8% 10%;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: medium;
+  }
+
+
+  .back-button:active {
+    background-color: darkgray; /* Change to dark gray when clicked */
+  }
+ 
+  .next-button {
+    background-color: white;
+    color: black;
+    border: none;
+    padding: 8% 10%;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: medium;
+  }
+
+
+  .next-button:active {
+    background-color: lightgray; /* Change to light gray when clicked */
+  }
+ 
+  .initiative-list > div {
+    display: flex; /* Center content inside each row */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    box-sizing: border-box; /* Ensure borders are included in the size */
+    width: 100%; /* Ensure each row takes up the full width */
+    margin: 0; /* Remove any default margin */
+    padding: 0; /* Remove any default padding */
+    border-top: 1px solid black; /* Add a border only at the top */
+  }
+ 
+  .initiative-list > div:first-child {
+    border-top: none; /* Remove the top border for the first row */
+  }
+
+
+  .row {
+    position: relative; /* Make the row a positioned container for the overlay */
+    display: flex;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+  }
+ 
+  .add-new-character {
+    position: absolute; /* Position the overlay on top of the row */
+    top: 0;
+    left: 0;
+    width: 100%; /* Cover the full width of the row */
+    height: 100%; /* Cover the full height of the row */
+    background-color: aqua; /* Aqua background for the overlay */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1; /* Ensure the overlay is above the row content */
+  }
+ 
+  .add-character-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+ 
+  .add-character-icon {
+    width: 6%; /* Adjust the size of the icon */
+    height: auto; /* Maintain aspect ratio */
+    object-fit: contain;
+  }
+ 
+  .initiative-input {
+    background-color: red;
+    flex: 0 0 10%; /* Take up 10% of the row's width */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    min-width: 0;
+    height: 100%;
+  }
+
+
+  .initiative-textbox {
+    width: 80%; /* Make the input box fit nicely within the column */
+    height: 70%; /* Adjust the height to fit the row */
+    border: 1px solid black; /* Add a border for visibility */
+    border-radius: 5px; /* Add rounded corners */
+    padding: 5px; /* Add padding inside the input box */
+    font-size: medium; /* Adjust font size */
+    box-sizing: border-box; /* Include padding and border in the size */
+    text-align: center; /* Center the text horizontally */
+    line-height: normal; /* Ensure proper vertical alignment */
+  }
+
+
+  /* Remove spinner for number input fields */
+.initiative-textbox::-webkit-inner-spin-button,
+.initiative-textbox::-webkit-outer-spin-button {
+  -webkit-appearance: none; /* Remove spinner in WebKit browsers */
+  margin: 0; /* Remove margin */
+}
+
+
+.initiative-textbox {
+  appearance: textfield; /* Standard property for compatibility */
+  -moz-appearance: textfield; /* Remove spinner in Firefox */
+}
+
+
+  .view-character-conditions {
+    background-color: orange;
+    flex: 0 0 5%; /* Take up 5% of the row's width */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    min-width: 0;
+    height: 100%;
+  }
+ 
+  .view-button {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    width: 80%; /* Adjust button size to fit the column */
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    transition: box-shadow 0.2s ease; /* Smooth transition for the shadow effect */
+  }
+ 
+  .view-icon {
+    width: 100%; /* Make the icon fill the button */
+    height: auto; /* Maintain aspect ratio */
+    object-fit: contain; /* Ensure the image fits nicely */
+    transition: filter 0.2s ease; /* Smooth transition for the filter effect */
+  }
+ 
+  .view-button:active {
+    box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.3); /* Add shadow on click */
+  }
+ 
+  .add-condition {
+    background-color: yellow;
+    flex: 0 0 5%; /* Take up 5% of the row's width */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    min-width: 0;
+    height: 100%;
+  }
+ 
+  .add-button {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    width: 90%; /* Adjust button size to fit the column */
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    transition: box-shadow 0.2s ease; /* Smooth transition for the shadow effect */
+  }
+ 
+  .add-icon {
+    width: 80%; /* Make the icon fill the button */
+    height: auto; /* Maintain aspect ratio */
+    object-fit: contain; /* Ensure the image fits nicely */
+    transition: filter 0.2s ease; /* Smooth transition for the filter effect */
+  }
+ 
+  .add-button:active {
+    box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.3); /* Add shadow on click */
+  }
+ 
+  .name-input {
+    background-color: #d1d188;
+    flex: 0 0 48%; /* Take up 45% of the row's width */
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    min-width: 0;
+    height: 100%;
+    font-size: larger;
+    font-weight: bold;;
+    padding-left: 2%;
+  }
+ 
+  .name-textbox {
+    width: 90%; /* Make the input box fit nicely within the column */
+    height: 70%; /* Adjust the height to fit the row */
+    border: 1px solid black; /* Add a border for visibility */
+    border-radius: 5px; /* Add rounded corners */
+    padding: 5px; /* Add padding inside the input box */
+    font-size: medium; /* Adjust font size */
+    box-sizing: border-box; /* Include padding and border in the size */
+    text-align: left; /* Center the text horizontally */
+  }
+ 
+  .personal-conditions {
+    background-color: purple;
+    flex: 0 0 30%; /* Take up 40% of the row's width */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    min-width: 0;
+    height: 100%;
+  }
+

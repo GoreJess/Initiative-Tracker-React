@@ -68,6 +68,14 @@
     background-color: #4caf50; /* green */
     color: white;
   }
+
+  .error-message {
+    color: red; /* Make the error message red */
+    font-size: 14px; /* Adjust the font size */
+    margin-top: 10px; /* Add some spacing above the message */
+    text-align: center; /* Center the text */
+    font-weight: bold;;
+  }
  
   .close-modal-button {
     background-color: #f44336; /* red */

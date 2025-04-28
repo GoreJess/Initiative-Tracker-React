@@ -1,5 +1,5 @@
 .initiative-list {
-    background-color: darkslategray;
+    background-color: var(--initiative-box-background);
     display: grid; /* Use grid layout */
     grid-template-rows: repeat(11, 1fr); /* Divide into 11 equal rows */
     height: 100%; /* Full height of the container */
@@ -12,7 +12,7 @@
 
 
   .initiative-banner {
-    background-color: darkred;
+    background-color: var(--initiative-banner);
     font-weight: bold;
     text-align: center;
     border: none;
@@ -111,7 +111,7 @@
     left: 0;
     width: 100%; /* Cover the full width of the row */
     height: 100%; /* Cover the full height of the row */
-    background-color: aqua; /* Aqua background for the overlay */
+    background-color: var(--initiative-box-background);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -134,7 +134,7 @@
   }
  
   .initiative-input {
-    background-color: red;
+    background-color: transparent;
     flex: 0 0 10%; /* Take up 10% of the row's width */
     display: flex;
     align-items: center;
@@ -174,10 +174,15 @@
 .shifted-row {
     transform: translateX(calc(100% - 98%)); /* Move the row to align with the left edge of .conditions-list */
     transition: transform 0.5s ease; /* Smooth transition */
+    background-color: var(--conditions-box-background); /* Change the background color to green when shifted */
+  }
+
+  .shifted-row .view-icon {
+    display: none; /* Hide the view-icon in the shifted row */
   }
 
   .view-character-conditions {
-    background-color: orange;
+    background-color: transparent;
     flex: 0 0 5%; /* Take up 5% of the row's width */
     display: flex;
     align-items: center;
@@ -213,7 +218,7 @@
   }
  
   .add-condition {
-    background-color: yellow;
+    background-color: transparent;
     flex: 0 0 5%; /* Take up 5% of the row's width */
     display: flex;
     align-items: center;
@@ -249,14 +254,14 @@
   }
  
   .name-input {
-    background-color: #d1d188;
+    background-color: transparent;
     flex: 0 0 48%; /* Take up 45% of the row's width */
     display: flex;
     align-items: center;
     justify-content: left;
     min-width: 0;
     height: 100%;
-    font-size: larger;
+    font-size: x-large;
     font-weight: bold;;
     padding-left: 2%;
   }

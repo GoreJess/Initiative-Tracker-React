@@ -60,9 +60,42 @@ export default function MainCode() {
         });
       };
   
-    const handlePreviousRound = () => {
-      setRound((prevRound) => (prevRound > 0 ? prevRound - 1 : 0)); // Decrement the round number, but not below 0
-    };
+      const handlePreviousRound = () => {
+        setRound((prevRound) => {
+          const sortedRows = [...rowData]
+            .map((row, index) => ({ ...row, index })) // Include the original index for tracking
+            .filter((row) => rowVisibility[row.index] && !overlayActive[row.index]) // Only consider visible rows without overlays
+            .sort((a, b) => {
+              if (b.initiative !== a.initiative) {
+                return (b.initiative ?? -Infinity) - (a.initiative ?? -Infinity); // Sort by initiative descending
+              }
+              return (a.name || '').localeCompare(b.name || ''); // Resolve ties alphabetically
+            });
+      
+          if (sortedRows.length === 0) {
+            return prevRound; // No valid rows to shift
+          }
+      
+          const currentRowIndex = shiftedRowIndex ?? -1; // Start with no row shifted
+          let previousRowIndex = null;
+      
+          // Find the previous row to shift
+          if (currentRowIndex === -1 || currentRowIndex === sortedRows[0].index) {
+            // If no row is shifted or the first row is shifted, move to the last row
+            previousRowIndex = sortedRows[sortedRows.length - 1].index;
+          } else {
+            // Otherwise, find the previous row in the sorted order
+            const currentIndexInSorted = sortedRows.findIndex((row) => row.index === currentRowIndex);
+            previousRowIndex = sortedRows[currentIndexInSorted - 1]?.index ?? sortedRows[sortedRows.length - 1].index;
+          }
+      
+          // Update the shifted row
+          setShiftedRowIndex(previousRowIndex);
+      
+          // Decrement the round counter only if we loop back to the last row
+          return previousRowIndex === sortedRows[sortedRows.length - 1].index ? Math.max(prevRound - 1, 0) : prevRound;
+        });
+      };
   
     const handleOpenModal = (rowIndex) => {
       setIsModalOpen(rowIndex);
@@ -198,6 +231,12 @@ export default function MainCode() {
                         onChange={(e) => handleInitiativeChange(index, e.target.value)}
                     />
                     </div>
+                    <div
+                    className="name-input"
+                    style={{ color: getTextColor(rowData[index].affiliation) }}
+                    >
+                    {rowData[index].name || 'No Name'}
+                    </div>
                     <div className="view-character-conditions">
                     <button className="view-button">
                         <img src={viewIcon} alt="View Icon" className="view-icon" />
@@ -207,12 +246,6 @@ export default function MainCode() {
                     <button className="add-button">
                         <img src={plusIcon} alt="Add Icon" className="add-icon" />
                     </button>
-                    </div>
-                    <div
-                    className="name-input"
-                    style={{ color: getTextColor(rowData[index].affiliation) }}
-                    >
-                    {rowData[index].name || 'No Name'}
                     </div>
                     <div className="personal-conditions">Conditions</div>
                 </div>

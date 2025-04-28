@@ -1,3 +1,5 @@
+@import './1colors.css';
+
 /* Set full height on root elements */
 html, body {
     height: 100%;
@@ -10,6 +12,7 @@ html, body {
     width: 100vw; /* Full width of the viewport */
     padding: 1vh 1vw; /* 1% padding around the edges */
     box-sizing: border-box; /* Includes padding in the total size */
+    background-color: var(--page-background);;
   }
  
   .container {
@@ -34,7 +37,7 @@ html, body {
     justify-content: center;
     box-sizing: border-box;
     border-radius: 10px;
-    background-color: blue;
+    background-color: var(--conditions-box-background);
     width: 39%; /* Adjusted to account for the gap */
   }
 

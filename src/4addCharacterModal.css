@@ -1,3 +1,5 @@
+@import './1colors.css';
+
 /* Modal overlay */
 .modal-overlay {
     position: fixed;
@@ -14,7 +16,7 @@
  
  /* Modal form styles */
 .modal {
-    background-color: #ffd6d6;
+    background-color: var(--modal-background);;
     padding: 20px;
     border-radius: 10px;
     width: 400px;

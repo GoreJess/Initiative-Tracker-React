@@ -1,7 +1,9 @@
 import React, { useState, } from 'react';
+import './1colors.css';
 import './2mainStyles.css';
 import './3initiativeList.css';
 import './4addCharacterModal.css'; // Import the modal styling
+import './5addConditionModal.css';
 import plusIcon from './media/plus-icon.png';
 import viewIcon from './media/view-icon.png';
 
@@ -9,6 +11,7 @@ export default function MainCode() {
     const [round, setRound] = useState(0); // Add state for the round number
     const [errorMessage, setErrorMessage] = useState(''); // Add state for error message
     const [isModalOpen, setIsModalOpen] = useState(null);
+    const [isAddConditionModalOpen, setIsAddConditionModalOpen] = useState(null); // Track the add-condition modal
     const [characterName, setCharacterName] = useState('');
     const [affiliation, setAffiliation] = useState('');
     const [rowVisibility, setRowVisibility] = useState(
@@ -23,6 +26,14 @@ export default function MainCode() {
 
     const [shiftedRowIndex, setShiftedRowIndex] = useState(null); // Track the index of the shifted row
   
+    const handleAddConditionClick = (rowIndex) => {
+        setIsAddConditionModalOpen(rowIndex); // This should set the modal state
+      };
+    
+      const handleCloseAddConditionModal = () => {
+        setIsAddConditionModalOpen(null); // Close the add-condition modal
+      };
+
     const handleNextRound = () => {
         setRound((prevRound) => {
           const sortedRows = [...rowData]
@@ -243,9 +254,12 @@ export default function MainCode() {
                     </button>
                     </div>
                     <div className="add-condition">
-                    <button className="add-button">
+                    <button
+                        className="add-button"
+                        onClick={() => handleAddConditionClick(index)} // Ensure this is correctly set
+                        >
                         <img src={plusIcon} alt="Add Icon" className="add-icon" />
-                    </button>
+                        </button>
                     </div>
                     <div className="personal-conditions">Conditions</div>
                 </div>
@@ -254,8 +268,9 @@ export default function MainCode() {
           <div className="conditions-list">Conditions</div>
         </div>
   
-        {isModalOpen !== null && (
-        <div className="modal-overlay">
+        {/* Add-Character Modal */}
+      {isModalOpen !== null && (
+        <div className="modal-overlay add-character-modal">
           <div className="modal">
             <h2>Add New Character</h2>
             <form onSubmit={handleSubmit}>
@@ -288,7 +303,7 @@ export default function MainCode() {
                   ))}
                 </div>
               </div>
-              {errorMessage && <p className="error-message">{errorMessage}</p>} {/* Display error message */}
+              {errorMessage && <p className="error-message">{errorMessage}</p>}
               <div className="modal-button-group">
                 <button type="button" className="close-modal-button" onClick={handleCloseModal}>
                   Close
@@ -298,6 +313,78 @@ export default function MainCode() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Add-Condition Modal */}
+      {isAddConditionModalOpen !== null && (
+  <div className="modal-overlay add-condition-modal">
+    <div className="condition-modal">
+      <h2>Add Condition</h2>
+      <p>Adding a condition for {rowData[isAddConditionModalOpen]?.name || 'Unnamed Character'}</p>
+      <table className="condition-table">
+        <tbody>
+          {[
+            'Blinded',
+            'Charmed',
+            'Deafened',
+            'Frightened',
+            'Grappled',
+            'Incapacitated',
+            'Invisible',
+            'Paralyzed',
+            'Petrified',
+            'Poisoned',
+            'Prone',
+            'Restrained',
+            'Stunned',
+            'Unconscious',
+            'Exhaustion 1',
+            'Exhaustion 2',
+            'Exhaustion 3',
+            'Exhaustion 4',
+            'Exhaustion 5',
+            'Exhaustion 6',
+            '(Custom)',
+          ].reduce((rows, condition, index) => {
+            const rowIndex = Math.floor(index / 4); // Determine the row index
+            const colIndex = index % 4; // Determine the column index
+            if (!rows[rowIndex]) rows[rowIndex] = []; // Initialize the row if it doesn't exist
+            rows[rowIndex][colIndex] = condition; // Assign the condition to the correct cell
+            return rows;
+          }, []).map((row, rowIndex) => (
+            <tr key={rowIndex}>
+              {row.map((condition, colIndex) => (
+                <td key={colIndex}>
+                  <button
+                    className={`condition-button condition-${condition.toLowerCase().replace(/\s+/g, '-')}`}
+                  >
+                    {condition}
+                  </button>
+                </td>
+              ))}
+            </tr>
+          ))}
+          <tr>
+            <td colSpan="2">
+              <button className="condition-button edit-character">Edit Character</button>
+            </td>
+            <td colSpan="2">
+              <button className="condition-button remove-character">Remove Character</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div className="modal-button-group">
+        <button
+          type="button"
+          className="close-modal-button"
+          onClick={handleCloseAddConditionModal}
+        >
+          Close
+        </button>
+            </div>
           </div>
         </div>
       )}

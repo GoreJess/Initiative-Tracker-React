@@ -16,7 +16,7 @@
  
  /* Modal form styles */
 .modal {
-    background-color: var(--modal-background);;
+    background-color: var(--character-modal-background);
     padding: 20px;
     border-radius: 10px;
     width: 400px;

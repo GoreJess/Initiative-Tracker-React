@@ -1,0 +1,90 @@
+@import './1colors.css';
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .condition-modal {
+    background-color: var(--condition-modal-background);
+    padding: 20px;
+    border-radius: 10px;
+    width: 550px;
+    max-width: 90%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  
+  .modal-button-group {
+    margin-top: 20px;
+  }
+  
+  .close-modal-button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .close-modal-button:hover {
+    background-color: #d32f2f;
+  }
+
+  .condition-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+  }
+  
+  .condition-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .condition-button:active {
+    background-color: #003f7f;
+  }
+  
+  .edit-character {
+    background-color: #28a745;
+  }
+  
+  .edit-character:hover {
+    background-color: #218838;
+  }
+  
+  .remove-character {
+    background-color: #dc3545;
+  }
+  
+  .remove-character:hover {
+    background-color: #c82333;
+  }
+
+  .condition-table {
+    margin: 0 auto; /* Center the table horizontally */
+    width: 100%; /* Optional: Adjust the width as needed */
+    border-collapse: collapse; /* Ensure borders collapse for a cleaner look */
+  }
+  
+  .condition-table th,
+  .condition-table td {
+    text-align: center; /* Center-align text in table cells */
+    padding: 10px; /* Add padding for better spacing */
+    border: 1px solid #ddd; /* Add a border for visibility */
+  }

@@ -23,7 +23,7 @@ html, body {
   }
  
   .initiative-list {
-    width: 39%; /* Adjusted to account for the gap */
+    width: 49%; /* Adjusted to account for the gap */
     height: 100%; /* Full height of the container */
     padding: 0; /* Ensure no extra padding */
     margin: 0; /* Ensure no extra margin */
@@ -38,6 +38,6 @@ html, body {
     box-sizing: border-box;
     border-radius: 10px;
     background-color: var(--conditions-box-background);
-    width: 39%; /* Adjusted to account for the gap */
+    width: 49%; /* Adjusted to account for the gap */
   }
 

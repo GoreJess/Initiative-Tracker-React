@@ -17,74 +17,98 @@
     background-color: var(--condition-modal-background);
     padding: 20px;
     border-radius: 10px;
-    width: 550px;
+    width: 600px;
     max-width: 90%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
+    position: relative;
+  }
+
+  .condition-modal .form-group > label {
+    font-size: larger; /* Increase font size for the labels */
+    font-weight: bold; /* Optional: Make the labels bold */
   }
   
+  .checkbox-item label {
+    font-size: large; /* Keep checkbox labels at a normal size */
+    font-weight: bold; /* Ensure checkbox labels are not bold */
+  }
+
+  .conditions-section {
+    background-color: var(--condition-modal-section-background);
+    padding: 15px; /* Add padding for spacing */
+    border-radius: 10px; /* Optional: Add rounded corners */
+    margin-bottom: 20px; /* Add spacing below the section */
+  }
+
+  .characters-section {
+    background-color: var(--condition-modal-section-background);
+    padding: 15px; /* Add padding for spacing */
+    border-radius: 10px; /* Optional: Add rounded corners */
+    margin-bottom: 20px; /* Add spacing below the section */
+  }
+  
+  .characters-section .conditions-section .form-group {
+    margin: 0; /* Remove default margin from the form group */
+  }
+
+  .conditions-checkbox-group,
+  .characters-checkbox-group {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Create 3 equal-width columns */
+  gap: 10px; /* Add spacing between the checkboxes */
+  margin-top: 10px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-item input[type="checkbox"] {
+  margin-right: 5px;
+}
+  
   .modal-button-group {
+    display: flex;
+    justify-content: space-between;
     margin-top: 20px;
+  }
+
+  .submit-button-container {
+    width: 100%;
+    justify-content: right;
+  }  
+  
+  .submit-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3;
   }
   
   .close-modal-button {
-    background-color: #f44336;
-    color: white;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
     border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
     cursor: pointer;
   }
   
   .close-modal-button:hover {
-    background-color: #d32f2f;
-  }
-
-  .condition-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    font-size: 14px;
-    cursor: pointer;
-    text-align: center;
-    width: 100%;
+    color: #555; /* Slightly lighter color on hover */
   }
   
-  .condition-button:hover {
-    background-color: #0056b3;
-  }
-  
-  .condition-button:active {
-    background-color: #003f7f;
-  }
-  
-  .edit-character {
-    background-color: #28a745;
-  }
-  
-  .edit-character:hover {
-    background-color: #218838;
-  }
-  
-  .remove-character {
-    background-color: #dc3545;
-  }
-  
-  .remove-character:hover {
-    background-color: #c82333;
-  }
-
-  .condition-table {
-    margin: 0 auto; /* Center the table horizontally */
-    width: 100%; /* Optional: Adjust the width as needed */
-    border-collapse: collapse; /* Ensure borders collapse for a cleaner look */
-  }
-  
-  .condition-table th,
-  .condition-table td {
-    text-align: center; /* Center-align text in table cells */
-    padding: 10px; /* Add padding for better spacing */
-    border: 1px solid #ddd; /* Add a border for visibility */
+  .close-modal-button:focus {
+    outline: none; /* Remove focus outline */
   }

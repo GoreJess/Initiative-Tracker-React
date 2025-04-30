@@ -1,0 +1,106 @@
+@import './1colors.css';
+
+.conditions-list {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc; /* Optional: Add a border for visibility */
+    border-radius: 10px;
+    overflow: hidden;
+    height: 100%; /* Adjust height as needed */
+  }
+  
+  .conditions-list-banner {
+    background-color: var(--condition-list-banner-background);
+    color: white;
+    text-align: center;
+    font-size: XX-large;
+    font-weight: bold;
+    width: 100%; /* Ensure it spans the full width of the box */
+    flex: 1; /* Take up 1/11th of the height */
+    display: flex;
+    align-items: center; /* Center text vertically */
+    justify-content: center; /* Space out the text and button */
+    box-sizing: border-box; /* Include padding in height calculation */
+    border-bottom: 1px solid black;
+    padding: 0 10px; /* Add padding for spacing */
+  }
+
+  .conditions-list-header {
+    width: 60%;
+    text-align: right; /* Optional: aligns text to the left inside the header */
+  }
+  
+  .conditions-banner-button {
+    width: 40%;
+    display: flex;
+    justify-content: flex-end; /* Pushes the button to the right side */
+    align-items: center; /* Vertically centers the button */
+    height: 100%;
+  }  
+  
+  .add-condition-button {
+    background-color: white;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: large;
+    cursor: pointer;
+    height: 70%;
+    font-weight: bold;
+    margin-left: 50%;
+  }
+  
+  .add-condition-button:hover {
+    background-color: lightgray;
+  }
+  
+  .add-condition-button:active {
+    background-color: gray;
+  }
+  
+  .conditions-list-content {
+    display: flex;
+    flex-direction: column;
+    flex: 10; /* Take up 10/11ths of the height */
+    width: 100%;
+  }
+  
+  .conditions-row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    flex: 1; /* Each row takes up an equal portion of the remaining height */
+  }
+  
+  .remove-condition {
+    background-color: green;
+    color: white;
+    width: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    font-weight: bold;
+  }
+  
+  .condition-description {
+    background-color: transparent;
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    font-weight: bold;
+  }
+  
+  .condition-expiration {
+    background-color: yellow;
+    color: black;
+    width: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    font-weight: bold;
+  }

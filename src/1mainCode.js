@@ -4,8 +4,10 @@ import './2mainStyles.css';
 import './3initiativeList.css';
 import './4addCharacterModal.css'; // Import the modal styling
 import './5addConditionModal.css';
+import './6conditionsDisplay.css';
 import plusIcon from './media/plus-icon.png';
 import viewIcon from './media/view-icon.png';
+import threeDots from './media/three-dots.png';
 
 export default function MainCode() {
     const [round, setRound] = useState(0); // Add state for the round number
@@ -21,13 +23,24 @@ export default function MainCode() {
       Array(10).fill(false).map((_, index) => index === 0)
     );
     const [rowData, setRowData] = useState(
-      Array(10).fill({ name: '', affiliation: '', initiative: null })
-    );
+        Array(10).fill({ name: '', affiliation: '', initiative: null, conditions: [] })
+      );
 
     const [shiftedRowIndex, setShiftedRowIndex] = useState(null); // Track the index of the shifted row
   
     const handleAddConditionClick = (rowIndex) => {
-        setIsAddConditionModalOpen(rowIndex); // This should set the modal state
+        setIsAddConditionModalOpen(rowIndex); // Open the modal for the specific row
+      };
+
+      const handleAddCondition = (rowIndex, conditions) => {
+        const updatedData = [...rowData];
+        conditions.forEach((condition) => {
+          if (!updatedData[rowIndex].conditions.includes(condition)) {
+            updatedData[rowIndex].conditions.push(condition); // Add the condition if it's not already present
+          }
+        });
+        setRowData(updatedData);
+        setIsAddConditionModalOpen(null); // Close the modal after adding the conditions
       };
     
       const handleCloseAddConditionModal = () => {
@@ -253,19 +266,42 @@ export default function MainCode() {
                         <img src={viewIcon} alt="View Icon" className="view-icon" />
                     </button>
                     </div>
-                    <div className="add-condition">
-                    <button
-                        className="add-button"
-                        onClick={() => handleAddConditionClick(index)} // Ensure this is correctly set
-                        >
-                        <img src={plusIcon} alt="Add Icon" className="add-icon" />
-                        </button>
+                    <div className="character-menu">
+                    <button className="character-menu-dots">
+                        <img src={threeDots} alt="Menu" className="character-menu-icon" />
+                    </button>
                     </div>
-                    <div className="personal-conditions">Conditions</div>
+                    <div className="personal-conditions">
+                    {rowData[index].conditions.length > 0
+                        ? rowData[index].conditions.join(', ') // Display conditions as a comma-separated list
+                        : '[No Conditions]'}
+                    </div>
                 </div>
                 ))}
           </div>
-          <div className="conditions-list">Conditions</div>
+          <div className="conditions-list">
+            {/* Banner */}
+            <div className="conditions-list-banner">
+                <div className="conditions-list-header">
+                    Conditions</div>
+                <div className="conditions-banner-button">
+                    <button className="add-condition-button" onClick={handleAddConditionClick}>
+                        Add Condition
+                    </button>
+                </div>
+            </div>
+
+            {/* Rows */}
+            <div className="conditions-list-content">
+                {Array.from({ length: 10 }).map((_, index) => (
+                <div key={index} className="conditions-row">
+                    <div className="remove-condition">Remove</div>
+                    <div className="condition-description">Description</div>
+                    <div className="condition-expiration">Expires</div>
+                </div>
+                ))}
+            </div>
+            </div>
         </div>
   
         {/* Add-Character Modal */}
@@ -306,7 +342,7 @@ export default function MainCode() {
               {errorMessage && <p className="error-message">{errorMessage}</p>}
               <div className="modal-button-group">
                 <button type="button" className="close-modal-button" onClick={handleCloseModal}>
-                  Close
+                  X
                 </button>
                 <button type="submit" className="submit-button">
                   Submit
@@ -317,77 +353,121 @@ export default function MainCode() {
         </div>
       )}
 
-      {/* Add-Condition Modal */}
-      {isAddConditionModalOpen !== null && (
+{/* Add-Condition Modal */}
+{isAddConditionModalOpen !== null && (
   <div className="modal-overlay add-condition-modal">
     <div className="condition-modal">
       <h2>Add Condition</h2>
-      <p>Adding a condition for {rowData[isAddConditionModalOpen]?.name || 'Unnamed Character'}</p>
-      <table className="condition-table">
-        <tbody>
-          {[
-            'Blinded',
-            'Charmed',
-            'Deafened',
-            'Frightened',
-            'Grappled',
-            'Incapacitated',
-            'Invisible',
-            'Paralyzed',
-            'Petrified',
-            'Poisoned',
-            'Prone',
-            'Restrained',
-            'Stunned',
-            'Unconscious',
-            'Exhaustion 1',
-            'Exhaustion 2',
-            'Exhaustion 3',
-            'Exhaustion 4',
-            'Exhaustion 5',
-            'Exhaustion 6',
-            '(Custom)',
-          ].reduce((rows, condition, index) => {
-            const rowIndex = Math.floor(index / 4); // Determine the row index
-            const colIndex = index % 4; // Determine the column index
-            if (!rows[rowIndex]) rows[rowIndex] = []; // Initialize the row if it doesn't exist
-            rows[rowIndex][colIndex] = condition; // Assign the condition to the correct cell
-            return rows;
-          }, []).map((row, rowIndex) => (
-            <tr key={rowIndex}>
-              {row.map((condition, colIndex) => (
-                <td key={colIndex}>
-                  <button
-                    className={`condition-button condition-${condition.toLowerCase().replace(/\s+/g, '-')}`}
-                  >
-                    {condition}
-                  </button>
-                </td>
-              ))}
-            </tr>
-          ))}
-          <tr>
-            <td colSpan="2">
-              <button className="condition-button edit-character">Edit Character</button>
-            </td>
-            <td colSpan="2">
-              <button className="condition-button remove-character">Remove Character</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div className="modal-button-group">
-        <button
-          type="button"
-          className="close-modal-button"
-          onClick={handleCloseAddConditionModal}
-        >
-          Close
-        </button>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          const selectedConditions = Array.from(
+            document.querySelectorAll('input[name="conditions"]:checked')
+          ).map((checkbox) => checkbox.value);
+
+          const selectedCharacters = Array.from(
+            document.querySelectorAll('input[name="characters"]:checked')
+          ).map((checkbox) => checkbox.value);
+
+          // Handle adding conditions to selected characters
+          selectedCharacters.forEach((characterName) => {
+            const rowIndex = rowData.findIndex((row) => row.name === characterName);
+            if (rowIndex !== -1) {
+              handleAddCondition(rowIndex, selectedConditions);
+            }
+          });
+
+          setIsAddConditionModalOpen(null); // Close the modal
+        }}
+      >
+        {/* Choose Condition(s) Section */}
+            <div className="conditions-section">
+            <div className="form-group">
+                <label htmlFor="conditions">Choose Condition(s):</label>
+                <div className="conditions-checkbox-group">
+                {[
+                    'Blinded',
+                    'Charmed',
+                    'Deafened',
+                    'Frightened',
+                    'Grappled',
+                    'Incapacitated',
+                    'Invisible',
+                    'Paralyzed',
+                    'Petrified',
+                    'Poisoned',
+                    'Prone',
+                    'Restrained',
+                    'Stunned',
+                    'Unconscious',
+                    'Exhaustion 1',
+                    'Exhaustion 2',
+                    'Exhaustion 3',
+                    'Exhaustion 4',
+                    'Exhaustion 5',
+                    'Exhaustion 6',
+                    '(Custom)',
+                ].map((condition) => (
+                    <div key={condition} className="checkbox-item">
+                    <input
+                        type="checkbox"
+                        id={`condition-${condition.toLowerCase().replace(/\s+/g, '-')}`}
+                        name="conditions"
+                        value={condition}
+                    />
+                    <label
+                        htmlFor={`condition-${condition.toLowerCase().replace(/\s+/g, '-')}`}
+                    >
+                        {condition}
+                    </label>
+                    </div>
+                ))}
+                </div>
             </div>
-          </div>
+            </div>
+
+        {/* Apply to Character(s) Section */}
+            <div className="characters-section">
+            <div className="form-group">
+                <label htmlFor="characters">Apply to Character(s):</label>
+                <div className="characters-checkbox-group">
+                {rowData
+                    .filter((row, index) => row.name && !overlayActive[index]) // Exclude unnamed characters and rows with an overlay
+                    .map((row, index) => (
+                    <div key={index} className="checkbox-item">
+                        <input
+                        type="checkbox"
+                        id={`character-${row.name.toLowerCase().replace(/\s+/g, '-')}`}
+                        name="characters"
+                        value={row.name}
+                        />
+                        <label
+                        htmlFor={`character-${row.name.toLowerCase().replace(/\s+/g, '-')}`}
+                        >
+                        {row.name}
+                        </label>
+                    </div>
+                    ))}
+                </div>
+            </div>
+            </div>
+
+        <div className="modal-button-group">
+        <div className="submit-button-container">
+            <button className="submit-button">Submit</button>
         </div>
-      )}
+          <button
+            type="button"
+            className="close-modal-button"
+            onClick={handleCloseAddConditionModal}
+          >
+            X
+          </button>
+        </div>
+      </form>
     </div>
-  );
-}
+  </div>
+)}
+            </div>
+        );
+        }

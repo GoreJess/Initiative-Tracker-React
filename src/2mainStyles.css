@@ -28,6 +28,7 @@ html, body {
     padding: 0; /* Ensure no extra padding */
     margin: 0; /* Ensure no extra margin */
     box-sizing: border-box; /* Include padding and borders in size calculations */
+    background-color: var(--initiative-box-background);
   }
  
   .conditions-list {

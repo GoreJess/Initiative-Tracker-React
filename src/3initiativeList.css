@@ -1,5 +1,4 @@
 .initiative-list {
-    background-color: var(--initiative-box-background);
     display: grid; /* Use grid layout */
     grid-template-rows: repeat(11, 1fr); /* Divide into 11 equal rows */
     height: 100%; /* Full height of the container */
@@ -218,34 +217,34 @@
  
   .character-menu {
     display: flex;
+    flex: 0 0 5%; /* Take up 5% of the row's width */
     align-items: center;
     justify-content: center;
     width: 10%; /* Adjust width as needed */
+    background-color: transparent;
   }
   
   .character-menu-dots {
     background: none;
     border: none;
     cursor: pointer;
-    padding: 5px;
   }
   
   .character-menu-icon {
-    width: 20px; /* Adjust size as needed */
-    height: 20px;
+    width: 21px; /* Adjust size as needed */
+    height: 21px;
   }
  
   .name-input {
     background-color: transparent;
-    flex: 0 0 48%; /* Take up 45% of the row's width */
+    flex: 0 0 40%; /* Take up 45% of the row's width */
     display: flex;
     align-items: center;
     justify-content: left;
     min-width: 0;
     height: 100%;
     font-size: x-large;
-    font-weight: bold;;
-    padding-left: 2%;
+    font-weight: bold;
   }
  
   .name-textbox {
@@ -260,13 +259,58 @@
   }
  
   .personal-conditions {
-    background-color: purple;
-    flex: 0 0 30%; /* Take up 40% of the row's width */
     display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    min-width: 0;
-    height: 100%;
+    flex: 0 0 40%; /* Take up 45% of the row's width */
+    flex-wrap: wrap; /* Allow sections to wrap */
+    gap: 3px; /* Add spacing between sections */
+  }
+  
+  .condition-section {
+    flex: 1 1 calc(10% - 10px); /* Each section takes up 10% of the width minus spacing */
+    text-align: center;
+    border-radius: 5px; /* Optional: Add rounded corners */
+    padding: 1px;
+    color: black; /* Ensure text is always black */
+    font-weight: bold;;
+  }
+  
+  .section-0 {
+    background-color: lightblue;
+  }
+  
+  .section-1 {
+    background-color: lightgreen;
+  }
+  
+  .section-2 {
+    background-color: lightcoral;
+  }
+  
+  .section-3 {
+    background-color: lightgoldenrodyellow;
+  }
+  
+  .section-4 {
+    background-color: lightpink;
+  }
+  
+  .section-5 {
+    background-color: lightgray;
+  }
+  
+  .section-6 {
+    background-color: lightcyan;
+  }
+  
+  .section-7 {
+    background-color: lightseagreen;
+  }
+  
+  .section-8 {
+    background-color: lightsalmon;
+  }
+  
+  .section-9 {
+    background-color: lightsteelblue;
   }
 

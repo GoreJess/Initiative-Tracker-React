@@ -6,5 +6,8 @@
     --character-modal-background: #e3bfbf;
     --condition-modal-background: #bfd1e3;
     --condition-list-banner-background: #0045d9;
-    --condition-modal-section-background: #0246d9;
+    --condition-modal-section-background: #77b3bb;
+    --bad-condition-background: #ff8686;
+    --good-condition-background: rgb(140, 214, 140);
+    --neutral-condition-background: #96a8ae;
 }

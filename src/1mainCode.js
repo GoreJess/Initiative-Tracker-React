@@ -173,6 +173,34 @@ export default function MainCode() {
       updatedData[index].initiative = value ? parseFloat(value) : null; // Save initiative value
       setRowData(updatedData);
     };
+
+    const getConditionBackgroundColor = (condition) => {
+      const conditionColors = {
+        Blinded: 'var(--bad-condition-background)',
+        Charmed: 'var(--bad-condition-background)',
+        Deafened: 'var(--bad-condition-background)',
+        Frightened: 'var(--bad-condition-background)',
+        Grappled: 'var(--bad-condition-background)',
+        Incapacitated: 'var(--bad-condition-background)',
+        Invisible: 'var(--good-condition-background)',
+        Paralyzed: 'var(--bad-condition-background)',
+        Petrified: 'var(--bad-condition-background)',
+        Poisoned: 'var(--bad-condition-background)',
+        Prone: 'var(--neutral-condition-background)',
+        Restrained: 'var(--bad-condition-background)',
+        Stunned: 'var(--bad-condition-background)',
+        Unconscious: 'var(--bad-condition-background)',
+        'Exhaustion1': 'var(--bad-condition-background)',
+        'Exhaustion2': 'var(--bad-condition-background)',
+        'Exhaustion3': 'var(--bad-condition-background)',
+        'Exhaustion4': 'var(--bad-condition-background)',
+        'Exhaustion5': 'var(--bad-condition-background)',
+        'Exhaustion6': 'var(--bad-condition-background)',
+        '(Custom)': 'var(--neutral-condition-background)',
+      };
+    
+      return conditionColors[condition] || 'var(--neutral-condition-background)'; // Default to neutral condition background
+    };
   
     const getTextColor = (affiliation) => {
       switch (affiliation) {
@@ -212,7 +240,7 @@ export default function MainCode() {
           <div className="initiative-list">
             <div className="initiative-banner">
               <div className="round-counter">Round {round}</div>
-              <div className="initiative-title">Initiative Title</div>
+              <div className="initiative-title">Initiative List</div>
               <div className="next-back">
                 {/* Conditionally render the buttons based on the overlay of the first row */}
                 {!overlayActive[0] && (
@@ -247,33 +275,41 @@ export default function MainCode() {
                     </div>
                     )}
                     <div className="initiative-input">
-                    <input
+                      <input
                         type="number"
                         className="initiative-textbox"
                         placeholder="#"
                         value={rowData[index].initiative ?? ''}
                         onChange={(e) => handleInitiativeChange(index, e.target.value)}
-                    />
-                    </div>
-                    <div
-                    className="name-input"
-                    style={{ color: getTextColor(rowData[index].affiliation) }}
-                    >
-                    {rowData[index].name || 'No Name'}
+                      />
                     </div>
                     <div className="view-character-conditions">
-                    <button className="view-button">
+                      <button className="view-button">
                         <img src={viewIcon} alt="View Icon" className="view-icon" />
-                    </button>
+                      </button>
                     </div>
                     <div className="character-menu">
-                    <button className="character-menu-dots">
+                      <button className="character-menu-dots">
                         <img src={threeDots} alt="Menu" className="character-menu-icon" />
-                    </button>
+                      </button>
+                    </div>
+                    <div className="name-input" style={{ color: getTextColor(rowData[index].affiliation) }}>
+                      {rowData[index].name || 'No Name'}
                     </div>
                     <div className="personal-conditions">
-                    {rowData[index].conditions.length > 0
-                        ? rowData[index].conditions.join(', ') // Display conditions as a comma-separated list
+                      {rowData[index].conditions.length > 0
+                        ? rowData[index].conditions.map((condition, i) => (
+                            <div
+                              key={condition + i}
+                              className="condition-section"
+                              style={{
+                                backgroundColor: getConditionBackgroundColor(condition), // Set background color based on condition
+                                color: 'black', // Ensure text is always black
+                              }}
+                            >
+                              {condition}
+                            </div>
+                          ))
                         : '[No Conditions]'}
                     </div>
                 </div>
@@ -295,7 +331,7 @@ export default function MainCode() {
             <div className="conditions-list-content">
                 {Array.from({ length: 10 }).map((_, index) => (
                 <div key={index} className="conditions-row">
-                    <div className="remove-condition">Remove</div>
+                    <div className="remove-condition">Remove Condition</div>
                     <div className="condition-description">Description</div>
                     <div className="condition-expiration">Expires</div>
                 </div>
@@ -360,23 +396,31 @@ export default function MainCode() {
       <h2>Add Condition</h2>
       <form
         onSubmit={(e) => {
-          e.preventDefault();
+          e.preventDefault(); // Prevent default form submission behavior
+
+          // Get selected conditions
           const selectedConditions = Array.from(
             document.querySelectorAll('input[name="conditions"]:checked')
           ).map((checkbox) => checkbox.value);
 
+          // Get selected characters
           const selectedCharacters = Array.from(
             document.querySelectorAll('input[name="characters"]:checked')
           ).map((checkbox) => checkbox.value);
 
-          // Handle adding conditions to selected characters
+          // Apply conditions to the selected characters only
           selectedCharacters.forEach((characterName) => {
             const rowIndex = rowData.findIndex((row) => row.name === characterName);
             if (rowIndex !== -1) {
-              handleAddCondition(rowIndex, selectedConditions);
+              const updatedRow = { ...rowData[rowIndex] };
+              updatedRow.conditions = [
+                ...new Set([...updatedRow.conditions, ...selectedConditions]), // Avoid duplicate conditions
+              ];
+              rowData[rowIndex] = updatedRow; // Update the row data
             }
           });
 
+          setRowData([...rowData]); // Update the state with the modified rows
           setIsAddConditionModalOpen(null); // Close the modal
         }}
       >
@@ -400,12 +444,12 @@ export default function MainCode() {
                     'Restrained',
                     'Stunned',
                     'Unconscious',
-                    'Exhaustion 1',
-                    'Exhaustion 2',
-                    'Exhaustion 3',
-                    'Exhaustion 4',
-                    'Exhaustion 5',
-                    'Exhaustion 6',
+                    'Exhaustion1',
+                    'Exhaustion2',
+                    'Exhaustion3',
+                    'Exhaustion4',
+                    'Exhaustion5',
+                    'Exhaustion6',
                     '(Custom)',
                 ].map((condition) => (
                     <div key={condition} className="checkbox-item">

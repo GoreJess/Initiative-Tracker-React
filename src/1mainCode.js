@@ -8,6 +8,7 @@ import './6conditionsDisplay.css';
 import plusIcon from './media/plus-icon.png';
 import viewIcon from './media/view-icon.png';
 import threeDots from './media/three-dots.png';
+import './6deleteCharacterModal.css';
 
 export default function MainCode() {
     const [round, setRound] = useState(0); // Add state for the round number
@@ -27,7 +28,11 @@ export default function MainCode() {
       );
 
     const [shiftedRowIndex, setShiftedRowIndex] = useState(null); // Track the index of the shifted row
-  
+    
+    const [openMenuIndex, setOpenMenuIndex] = useState(null);
+
+    const [deleteConfirmIndex, setDeleteConfirmIndex] = useState(null);
+
     const handleAddConditionClick = (rowIndex) => {
         setIsAddConditionModalOpen(rowIndex); // Open the modal for the specific row
       };
@@ -288,10 +293,36 @@ export default function MainCode() {
                         <img src={viewIcon} alt="View Icon" className="view-icon" />
                       </button>
                     </div>
-                    <div className="character-menu">
-                      <button className="character-menu-dots">
+                    <div className="character-menu" style={{ position: 'relative' }}>
+                      <button
+                        className="character-menu-dots"
+                        onClick={() => setOpenMenuIndex(openMenuIndex === index ? null : index)}
+                        type="button"
+                      >
                         <img src={threeDots} alt="Menu" className="character-menu-icon" />
                       </button>
+                      {openMenuIndex === index && (
+                        <div className="character-dropdown-menu">
+                          <button
+                            className="dropdown-item"
+                            onClick={() => {
+                              // TODO: Implement edit character logic
+                              setOpenMenuIndex(null);
+                            }}
+                          >
+                            Edit Character
+                          </button>
+                          <button
+                            className="dropdown-item"
+                            onClick={() => {
+                              setDeleteConfirmIndex(index);
+                              setOpenMenuIndex(null);
+                            }}
+                          >
+                            Delete Character
+                          </button>
+                        </div>
+                      )}
                     </div>
                     <div className="name-input" style={{ color: getTextColor(rowData[index].affiliation) }}>
                       {rowData[index].name || 'No Name'}
@@ -388,6 +419,36 @@ export default function MainCode() {
           </div>
         </div>
       )}
+
+{deleteConfirmIndex !== null && (
+  <div className="modal-overlay delete-confirm-modal">
+    <div className="modal">
+      <p>
+        Are you sure you want to delete{' '}
+        <span style={{ color: 'darkblue' }}>
+          {rowData[deleteConfirmIndex]?.name || 'this character'}
+        </span>
+        ?<br></br> This action cannot be undone.
+      </p>
+      <div className="character-delete-modal-button-group">
+        <button
+          className="character-delete-cancel-button"
+          onClick={() => setDeleteConfirmIndex(null)}
+        >
+          Cancel
+        </button>
+        <button
+          className="character-delete-submit-button"
+          onClick={() => {
+            setDeleteConfirmIndex(null);
+          }}
+        >
+          Proceed
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
 {/* Add-Condition Modal */}
 {isAddConditionModalOpen !== null && (

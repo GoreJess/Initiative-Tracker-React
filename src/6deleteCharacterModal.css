@@ -1,0 +1,41 @@
+@import './1colors.css';
+
+  .delete-confirm-modal {
+  z-index: 2000;
+}
+
+.delete-confirm-modal .modal {
+  background: #fff;
+}
+
+.delete-confirm-modal .modal p {
+  color: red;
+  font-weight: bold;
+}
+
+/* Delete Confirm Modal Button Styles */
+.delete-confirm-modal .character-delete-modal-button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+.delete-confirm-modal .character-delete-cancel-button,
+.delete-confirm-modal .character-delete-submit-button {
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 28px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+
+.delete-confirm-modal .character-delete-cancel-button:hover,
+.delete-confirm-modal .character-delete-submit-button:hover {
+  background: darkblue;
+  color: #fff;
+}

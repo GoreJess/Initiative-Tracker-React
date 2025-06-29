@@ -1,4 +1,4 @@
-import React, { useState, } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './1colors.css';
 import './2mainStyles.css';
 import './3initiativeList.css';
@@ -8,7 +8,7 @@ import './6conditionsDisplay.css';
 import plusIcon from './media/plus-icon.png';
 import viewIcon from './media/view-icon.png';
 import threeDots from './media/three-dots.png';
-import './6deleteCharacterModal.css';
+import './7deleteCharacterModal.css';
 
 export default function MainCode() {
     const [round, setRound] = useState(0); // Add state for the round number
@@ -32,6 +32,8 @@ export default function MainCode() {
     const [openMenuIndex, setOpenMenuIndex] = useState(null);
 
     const [deleteConfirmIndex, setDeleteConfirmIndex] = useState(null);
+
+    const [editCharacterIndex, setEditCharacterIndex] = useState(null);
 
     const handleAddConditionClick = (rowIndex) => {
         setIsAddConditionModalOpen(rowIndex); // Open the modal for the specific row
@@ -134,44 +136,58 @@ export default function MainCode() {
       setIsModalOpen(null);
       setCharacterName('');
       setAffiliation('');
+      setEditCharacterIndex(null);
     };
   
     const handleSubmit = (event) => {
-        event.preventDefault();
-    
-        // Validate form inputs
-        if (!characterName.trim() || !affiliation) {
-          setErrorMessage('Please fill out all fields before submitting.');
-          return;
-        }
-    
-        const updatedData = [...rowData];
+      event.preventDefault();
+
+      // Validate form inputs
+      if (!characterName.trim() || !affiliation) {
+        setErrorMessage('Please fill out all fields before submitting.');
+        return;
+      }
+
+      const updatedData = [...rowData];
+
+      if (editCharacterIndex !== null) {
+        // Edit existing character
+        updatedData[editCharacterIndex] = {
+          ...updatedData[editCharacterIndex],
+          name: characterName,
+          affiliation: affiliation,
+        };
+        setRowData(updatedData);
+        setEditCharacterIndex(null);
+      } else {
+        // Add new character logic
         updatedData[isModalOpen] = {
           ...updatedData[isModalOpen],
           name: characterName,
           affiliation: affiliation,
         };
         setRowData(updatedData);
-    
+
         const updatedOverlay = [...overlayActive];
         updatedOverlay[isModalOpen] = false;
         if (isModalOpen + 1 < updatedOverlay.length) {
           updatedOverlay[isModalOpen + 1] = true;
         }
         setOverlayActive(updatedOverlay);
-    
+
         const updatedVisibility = [...rowVisibility];
         if (isModalOpen + 1 < updatedVisibility.length) {
           updatedVisibility[isModalOpen + 1] = true;
         }
         setRowVisibility(updatedVisibility);
-    
-        // Reset modal state
-        setIsModalOpen(null);
-        setCharacterName('');
-        setAffiliation('');
-        setErrorMessage(''); // Clear the error message
-      };
+      }
+
+      // Reset modal state
+      setIsModalOpen(null);
+      setCharacterName('');
+      setAffiliation('');
+      setErrorMessage('');
+    };
   
     const handleInitiativeChange = (index, value) => {
       const updatedData = [...rowData];
@@ -238,6 +254,25 @@ export default function MainCode() {
     const overlayRows = visibleRows.filter((row) => overlayActive[row.index]);
   
     const sortedRows = [...normalRows, ...overlayRows];
+
+    const dropdownRef = useRef(null);
+
+      useEffect(() => {
+        if (openMenuIndex !== null) {
+          const handleClickOutside = (event) => {
+            if (
+              dropdownRef.current &&
+              !dropdownRef.current.contains(event.target)
+            ) {
+              setOpenMenuIndex(null);
+            }
+          };
+          document.addEventListener('mousedown', handleClickOutside);
+          return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+          };
+        }
+      }, [openMenuIndex]);
   
     return (
       <div className="wrapper">
@@ -296,17 +331,23 @@ export default function MainCode() {
                     <div className="character-menu" style={{ position: 'relative' }}>
                       <button
                         className="character-menu-dots"
-                        onClick={() => setOpenMenuIndex(openMenuIndex === index ? null : index)}
+                        onMouseDown={(e) => {
+                          e.stopPropagation(); // Prevent the document handler from firing
+                          setOpenMenuIndex(openMenuIndex === index ? null : index);
+                        }}
                         type="button"
                       >
                         <img src={threeDots} alt="Menu" className="character-menu-icon" />
                       </button>
                       {openMenuIndex === index && (
-                        <div className="character-dropdown-menu">
+                        <div className="character-dropdown-menu" ref={dropdownRef}>
                           <button
                             className="dropdown-item"
                             onClick={() => {
-                              // TODO: Implement edit character logic
+                              setEditCharacterIndex(index);
+                              setCharacterName(rowData[index].name);
+                              setAffiliation(rowData[index].affiliation);
+                              setIsModalOpen(index); // Open the modal
                               setOpenMenuIndex(null);
                             }}
                           >

@@ -186,6 +186,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    justify-items: center;
     color: white;
     min-width: 0;
     height: 100%;
@@ -289,58 +290,28 @@
   }
  
   .personal-conditions {
-    display: flex;
-    flex: 0 0 40%; /* Take up 45% of the row's width */
-    flex-wrap: wrap; /* Allow sections to wrap */
-    gap: 3px; /* Add spacing between sections */
-  }
+  display: flex;
+  padding: 3px;
+  flex: 0 0 39%; /* Take up 45% of the row's width */
+  flex-wrap: wrap; /* Allow sections to wrap */
+  gap: 3px; /* Add spacing between sections */
+  align-items: center;      /* Center vertically */
+  justify-content: center;  /* Center horizontally */
+}
+
+.personal-conditions .no-conditions {
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  color: black;
+}
   
   .condition-section {
     flex: 1 1 calc(10% - 10px); /* Each section takes up 10% of the width minus spacing */
     text-align: center;
     border-radius: 5px; /* Optional: Add rounded corners */
-    padding: 1px;
+    padding: 3px;
     color: black; /* Ensure text is always black */
-    font-weight: bold;;
-  }
-  
-  .section-0 {
-    background-color: lightblue;
-  }
-  
-  .section-1 {
-    background-color: lightgreen;
-  }
-  
-  .section-2 {
-    background-color: lightcoral;
-  }
-  
-  .section-3 {
-    background-color: lightgoldenrodyellow;
-  }
-  
-  .section-4 {
-    background-color: lightpink;
-  }
-  
-  .section-5 {
-    background-color: lightgray;
-  }
-  
-  .section-6 {
-    background-color: lightcyan;
-  }
-  
-  .section-7 {
-    background-color: lightseagreen;
-  }
-  
-  .section-8 {
-    background-color: lightsalmon;
-  }
-  
-  .section-9 {
-    background-color: lightsteelblue;
+    font-weight: bold;
   }
 

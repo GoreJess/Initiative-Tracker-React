@@ -481,7 +481,30 @@ export default function MainCode() {
         <button
           className="character-delete-submit-button"
           onClick={() => {
+            let updatedData = [...rowData];
+            let updatedVisibility = [...rowVisibility];
+            let updatedOverlay = [...overlayActive];
+
+            updatedData.splice(deleteConfirmIndex, 1);
+            updatedVisibility.splice(deleteConfirmIndex, 1);
+            updatedOverlay.splice(deleteConfirmIndex, 1);
+
+            // Only add a new empty row if:
+            // - There are fewer than 10 rows
+            // - There is NOT already an empty row (row with no name)
+            const hasEmptyRow = updatedData.some(row => !row.name);
+            if (updatedData.length < 10 && !hasEmptyRow) {
+              updatedData.push({ name: '', affiliation: '', initiative: null, conditions: [] });
+              updatedVisibility.push(true); // or false, depending on your logic
+              updatedOverlay.push(true);    // show the add-character button
+            }
+
+            setRowData(updatedData);
+            setRowVisibility(updatedVisibility);
+            setOverlayActive(updatedOverlay);
+
             setDeleteConfirmIndex(null);
+            setOpenMenuIndex(null);
           }}
         >
           Proceed

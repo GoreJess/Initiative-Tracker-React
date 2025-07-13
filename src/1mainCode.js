@@ -27,6 +27,8 @@ export default function MainCode() {
         Array(10).fill({ name: '', affiliation: '', initiative: null, conditions: [] })
       );
 
+    const [sortedRowData, setSortedRowData] = useState([]);
+
     const [shiftedRowIndex, setShiftedRowIndex] = useState(null); // Track the index of the shifted row
     
     const [openMenuIndex, setOpenMenuIndex] = useState(null);
@@ -56,75 +58,52 @@ export default function MainCode() {
 
     const handleNextRound = () => {
         setRound((prevRound) => {
-          const sortedRows = [...rowData]
-            .map((row, index) => ({ ...row, index })) // Include the original index for tracking
-            .filter((row) => rowVisibility[row.index] && !overlayActive[row.index]) // Only consider visible rows without overlays
-            .sort((a, b) => {
-              if (b.initiative !== a.initiative) {
-                return (b.initiative ?? -Infinity) - (a.initiative ?? -Infinity); // Sort by initiative descending
-              }
-              return (a.name || '').localeCompare(b.name || ''); // Resolve ties alphabetically
-            });
-      
-          if (sortedRows.length === 0) {
-            return prevRound; // No valid rows to shift
-          }
+          const sortedRows = [...sortedRowData]
+            .filter((_, index) => !overlayActive[index]) // Only consider visible rows without overlays
       
           const currentRowIndex = shiftedRowIndex ?? -1; // Start with no row shifted
           let nextRowIndex = null;
       
           // Find the next row to shift
-          if (currentRowIndex === -1 || currentRowIndex === sortedRows[sortedRows.length - 1].index) {
+          if (currentRowIndex === -1 || currentRowIndex === sortedRows.length - 1) {
             // If no row is shifted or the last row is shifted, start from the first row
-            nextRowIndex = sortedRows[0].index;
+            nextRowIndex = 0;
           } else {
             // Otherwise, find the next row in the sorted order
-            const currentIndexInSorted = sortedRows.findIndex((row) => row.index === currentRowIndex);
-            nextRowIndex = sortedRows[currentIndexInSorted + 1]?.index ?? sortedRows[0].index;
+            // const currentIndexInSorted = sortedRows.findIndex((row) => row.index === currentRowIndex);
+            nextRowIndex = currentRowIndex + 1;
           }
       
           // Update the shifted row
           setShiftedRowIndex(nextRowIndex);
       
           // Increment the round counter only if we loop back to the first row
-          return nextRowIndex === sortedRows[0].index ? prevRound + 1 : prevRound;
+          return nextRowIndex === 0 ? prevRound + 1 : prevRound;
         });
       };
   
       const handlePreviousRound = () => {
         setRound((prevRound) => {
-          const sortedRows = [...rowData]
-            .map((row, index) => ({ ...row, index })) // Include the original index for tracking
-            .filter((row) => rowVisibility[row.index] && !overlayActive[row.index]) // Only consider visible rows without overlays
-            .sort((a, b) => {
-              if (b.initiative !== a.initiative) {
-                return (b.initiative ?? -Infinity) - (a.initiative ?? -Infinity); // Sort by initiative descending
-              }
-              return (a.name || '').localeCompare(b.name || ''); // Resolve ties alphabetically
-            });
-      
-          if (sortedRows.length === 0) {
-            return prevRound; // No valid rows to shift
-          }
+          const sortedRows = [...sortedRowData]
+            .filter((_, index) => !overlayActive[index]) // Only consider visible rows without overlays
       
           const currentRowIndex = shiftedRowIndex ?? -1; // Start with no row shifted
           let previousRowIndex = null;
       
           // Find the previous row to shift
-          if (currentRowIndex === -1 || currentRowIndex === sortedRows[0].index) {
+          if (currentRowIndex === -1 || currentRowIndex === 0) {
             // If no row is shifted or the first row is shifted, move to the last row
-            previousRowIndex = sortedRows[sortedRows.length - 1].index;
+            previousRowIndex = sortedRows.length - 1;
           } else {
             // Otherwise, find the previous row in the sorted order
-            const currentIndexInSorted = sortedRows.findIndex((row) => row.index === currentRowIndex);
-            previousRowIndex = sortedRows[currentIndexInSorted - 1]?.index ?? sortedRows[sortedRows.length - 1].index;
+            previousRowIndex = currentRowIndex - 1;
           }
       
           // Update the shifted row
           setShiftedRowIndex(previousRowIndex);
       
           // Decrement the round counter only if we loop back to the last row
-          return previousRowIndex === sortedRows[sortedRows.length - 1].index ? Math.max(prevRound - 1, 0) : prevRound;
+          return previousRowIndex === sortedRows.length - 1 ? Math.max(prevRound - 1, 0) : prevRound;
         });
       };
   
@@ -237,23 +216,6 @@ export default function MainCode() {
           return 'black';
       }
     };
-  
-    const visibleRows = rowData
-      .map((data, index) => ({ ...data, index }))
-      .filter((_, i) => rowVisibility[i]);
-  
-    const normalRows = visibleRows
-      .filter((row) => !overlayActive[row.index])
-      .sort((a, b) => {
-        if (b.initiative !== a.initiative) {
-          return (b.initiative ?? -Infinity) - (a.initiative ?? -Infinity);
-        }
-        return (a.name || '').localeCompare(b.name || '');
-      });
-  
-    const overlayRows = visibleRows.filter((row) => overlayActive[row.index]);
-  
-    const sortedRows = [...normalRows, ...overlayRows];
 
     const dropdownRef = useRef(null);
 
@@ -273,6 +235,27 @@ export default function MainCode() {
           };
         }
       }, [openMenuIndex]);
+
+    useEffect(() => {
+      const visibleRows = rowData
+        .map((data, index) => ({ ...data, index }))
+        .filter((_, i) => rowVisibility[i]);
+  
+      const normalRows = visibleRows
+        .filter((row) => !overlayActive[row.index])
+        .sort((a, b) => {
+          if (b.initiative !== a.initiative) {
+            return (b.initiative ?? -Infinity) - (a.initiative ?? -Infinity);
+          }
+          return (a.name || '').localeCompare(b.name || '');
+        });
+    
+      const overlayRows = visibleRows.filter((row) => overlayActive[row.index]);
+    
+      const sortedRows = [...normalRows, ...overlayRows];
+
+      setSortedRowData(sortedRows);
+    }, [rowData])
   
     return (
       <div className="wrapper">
@@ -295,10 +278,10 @@ export default function MainCode() {
                 )}
               </div>
             </div>
-            {sortedRows.map(({ index }) => (
+            {sortedRowData.map(({ index }, shiftedIndex) => (
                 <div
                     key={index}
-                    className={`row ${index === shiftedRowIndex ? 'shifted-row' : ''}`}
+                    className={`row ${shiftedIndex === shiftedRowIndex ? 'shifted-row' : ''}`}
                 >
                     {overlayActive[index] && (
                     <div className="add-new-character">
@@ -499,9 +482,6 @@ export default function MainCode() {
               updatedOverlay.push(updatedData[updatedData.length - 2].name !== '' ? true : false);    // show the add-character button
             // }
 
-            if (shiftedRowIndex) {
-              setShiftedRowIndex(deleteConfirmIndex);
-            }
             setRowData(updatedData);
             setRowVisibility(updatedVisibility);
             setOverlayActive(updatedOverlay);

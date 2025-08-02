@@ -235,6 +235,9 @@ export default function MainCode() {
         'Exhaustion4': 'var(--bad-condition-background)',
         'Exhaustion5': 'var(--bad-condition-background)',
         'Exhaustion6': 'var(--bad-condition-background)',
+        Other1: 'var(--neutral-condition-background)',
+        Other2: 'var(--neutral-condition-background)',
+        Other3: 'var(--neutral-condition-background)',
         '(Custom)': 'var(--neutral-condition-background)',
       };
     
@@ -688,6 +691,9 @@ export default function MainCode() {
                     'Exhaustion4',
                     'Exhaustion5',
                     'Exhaustion6',
+                    'Other1',
+                    'Other2',
+                    'Other3',
                     '(Custom)',
                 ].map((condition) => (
                     <div key={condition} className="checkbox-item">

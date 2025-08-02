@@ -409,8 +409,11 @@ export default function MainCode() {
 
             {/* Rows */}
             <div className="conditions-list-content">
-              {shiftedRowIndex !== null && rowData[shiftedRowIndex] && rowData[shiftedRowIndex].conditions.length > 0 ? (
-                rowData[shiftedRowIndex].conditions.map((condition, i) => (
+              {shiftedRowIndex !== null &&
+              sortedRowData[shiftedRowIndex] &&
+              rowData[sortedRowData[shiftedRowIndex].index] &&
+              rowData[sortedRowData[shiftedRowIndex].index].conditions.length > 0 ? (
+                rowData[sortedRowData[shiftedRowIndex].index].conditions.map((condition, i) => (
                   <div key={condition + i} className="conditions-row">
                     <div className="remove-condition">
                       <button
@@ -418,7 +421,8 @@ export default function MainCode() {
                         onClick={() => {
                           // Remove this condition from the shifted row
                           const updatedData = [...rowData];
-                          updatedData[shiftedRowIndex].conditions = updatedData[shiftedRowIndex].conditions.filter(
+                          const realIndex = sortedRowData[shiftedRowIndex].index;
+                          updatedData[realIndex].conditions = updatedData[realIndex].conditions.filter(
                             (c) => c !== condition
                           );
                           setRowData(updatedData);
@@ -450,7 +454,6 @@ export default function MainCode() {
                 <div className="conditions-row">
                   <div className="remove-condition"></div>
                   <div className="condition-description" style={{ textAlign: 'center', width: '100%' }}>
-                    No conditions for this character.
                   </div>
                   <div className="condition-expiration"></div>
                 </div>

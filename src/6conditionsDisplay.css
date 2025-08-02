@@ -74,9 +74,9 @@
   }
   
   .remove-condition {
-    background-color: green;
+    background-color: transparent;
     color: white;
-    width: 10%;
+    width: 5%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -84,16 +84,39 @@
     padding: 10px;
     font-weight: bold;
   }
+
+  .remove-condition-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.remove-condition-button img {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+  pointer-events: none; /* Prevents accidental drag of the image */
+}
+
+.remove-condition-button:focus {
+  outline: 2px solid #333;
+}
   
-  .condition-description {
-    background-color: transparent;
-    width: 80%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px;
-    font-weight: bold;
-  }
+.condition-description {
+  background-color: transparent;
+  width: 80%;
+  display: flex;
+  flex-direction: column;      /* Stack name and description vertically */
+  align-items: flex-start;     /* Left-justify content horizontally */
+  justify-content: center;     /* Center content vertically */
+  padding: 10px;
+  font-weight: normal;         /* Only the name will be bold */
+  text-align: left;
+}
   
   .condition-expiration {
     background-color: yellow;

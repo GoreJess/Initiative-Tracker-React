@@ -441,7 +441,7 @@ export default function MainCode() {
                         onClick={() => {
                           // Remove this condition from the shifted row
                           const updatedData = [...rowData];
-                          const realIndex = sortedRowData[shiftedRowIndex].index;
+                          const realIndex = sortedRowData[viewCharacterIndex].index;
                           updatedData[realIndex].conditions = updatedData[realIndex].conditions.filter(
                             (c) => c !== condition
                           );

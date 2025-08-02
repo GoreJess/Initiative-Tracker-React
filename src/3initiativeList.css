@@ -25,6 +25,48 @@
     color: white;
   }
 
+.banner-gear-icon {
+  display: flex;
+  flex: 0 0 5%;
+  align-items: center;
+  justify-content: center;;
+}
+
+.gear-icon-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.gear-icon-img {
+  width: 70%;
+  height: 70%;
+}
+
+.settings-button-group {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin: 24px 0;
+}
+
+.settings-action-button {
+  padding: 12px 24px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: var(--initiative-banner, #333);
+  color: white;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.settings-action-button:hover {
+  background: #222;
+}
+
   .round-counter {
     flex: 0 0 20%; /* Take up 20% of the width */
     height: 100%; /* Ensure it fills its container */
@@ -35,7 +77,7 @@
   }
  
   .initiative-title {
-    flex: 0 0 55%; /* Take up 40% of the width */
+    flex: 0 0 52%; /* Take up 40% of the width */
     height: 100%; /* Ensure it fills its container */
     display: flex;
     align-items: center;

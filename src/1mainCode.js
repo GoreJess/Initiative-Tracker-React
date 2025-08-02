@@ -10,8 +10,74 @@ import viewIcon from './media/view-icon.png';
 import threeDots from './media/three-dots.png';
 import './7deleteCharacterModal.css';
 import minusIcon from './media/minus-icon.png';
+import gearIcon from './media/gear-icon.png';
 
 export default function MainCode() {
+
+    const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+
+    const handleNewCombat = () => {
+      let updatedData = [...rowData];
+      let updatedVisibility = [...rowVisibility];
+      let updatedOverlay = [...overlayActive];
+
+      // Remove all Enemy, Ally, and Neutral/Environmental rows
+      for (let i = updatedData.length - 1; i >= 0; i--) {
+        const aff = updatedData[i].affiliation;
+        if (aff === 'Enemy' || aff === 'Ally' || aff === 'Neutral/Environmental') {
+          updatedData.splice(i, 1);
+          updatedVisibility.splice(i, 1);
+          updatedOverlay.splice(i, 1);
+        }
+      }
+
+      // Remove all conditions and clear initiative from remaining rows
+      updatedData = updatedData.map(row => ({
+        ...row,
+        conditions: [],
+        initiative: null // Clear initiative input
+      }));
+
+      // Fill up to 10 rows with empty slots if needed
+      while (updatedData.length < 10) {
+        updatedData.push({ name: '', affiliation: '', initiative: null, conditions: [] });
+        updatedVisibility.push(
+          updatedData.length === 1
+            ? true
+            : updatedData[updatedData.length - 2].name !== ''
+            ? true
+            : false
+        );
+        updatedOverlay.push(
+          updatedData.length === 1
+            ? true
+            : updatedData[updatedData.length - 2].name !== ''
+            ? true
+            : false
+        );
+      }
+
+      setRowData(updatedData);
+      setRowVisibility(updatedVisibility);
+      setOverlayActive(updatedOverlay);
+      setRound(0);
+      setShiftedRowIndex(null);
+      setViewCharacterIndex(null);
+      setIsSettingsModalOpen(false); // Close the modal
+    };
+
+    const handleFullReset = () => {
+      setRowData(
+        Array(10).fill({ name: '', affiliation: '', initiative: null, conditions: [] })
+      );
+      setRowVisibility(Array(10).fill(false).map((_, idx) => idx === 0));
+      setOverlayActive(Array(10).fill(false).map((_, idx) => idx === 0));
+      setRound(0);
+      setShiftedRowIndex(null);
+      setViewCharacterIndex(null);
+      setIsSettingsModalOpen(false); // Close the modal
+    };
+
     const [round, setRound] = useState(0); // Add state for the round number
     const [errorMessage, setErrorMessage] = useState(''); // Add state for error message
     const [isModalOpen, setIsModalOpen] = useState(null);
@@ -300,10 +366,48 @@ export default function MainCode() {
     }, [rowData])
   
     return (
-      <div className="wrapper">
-        <div className="container">
+   <>
+    {isSettingsModalOpen && (
+      <div className="modal-overlay settings-modal">
+        <div className="modal">
+          <h2>Settings</h2>
+          <div className="settings-button-group">
+            <button
+              className="settings-action-button"
+              onClick={handleNewCombat}
+            >
+              New Combat
+            </button>
+            <button
+              className="settings-action-button"
+              onClick={handleFullReset}
+            >
+              Full Reset
+            </button>
+          </div>
+          <button
+            className="close-modal-button"
+            onClick={() => setIsSettingsModalOpen(false)}
+          >
+            X
+          </button>
+        </div>
+      </div>
+    )}
+
+    <div className="wrapper">
+      <div className="container">
           <div className="initiative-list">
             <div className="initiative-banner">
+              <div className="banner-gear-icon">
+                <button
+                  className="gear-icon-button"
+                  onClick={() => setIsSettingsModalOpen(true)}
+                  aria-label="Open Settings"
+                >
+                  <img src={gearIcon} alt="Settings" className="gear-icon-img" />
+                </button>
+              </div>
               <div className="round-counter">Round {round}</div>
               <div className="initiative-title">Initiative List</div>
               <div className="next-back">
@@ -757,5 +861,6 @@ export default function MainCode() {
   </div>
 )}
             </div>
+        </>
         );
         }

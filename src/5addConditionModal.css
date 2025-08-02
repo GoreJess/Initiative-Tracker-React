@@ -24,6 +24,22 @@
     position: relative;
   }
 
+  .selectable-item {
+  padding: 6px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  background: transparent;
+  transition: background 0.2s;
+  text-align: center;
+  font-size: large;
+  font-weight: normal;
+}
+
+.selectable-item.selected {
+  background: #002366; /* dark blue */
+  color: white;
+}
+
   .condition-modal .form-group > label {
     font-size: larger; /* Increase font size for the labels */
     font-weight: bold; /* Optional: Make the labels bold */
@@ -80,7 +96,7 @@
   }  
   
   .submit-button {
-    background-color: #007bff;
+    background-color: #002366;
     color: white;
     border: none;
     border-radius: 5px;

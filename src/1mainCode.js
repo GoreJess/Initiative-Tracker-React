@@ -123,6 +123,51 @@ export default function MainCode() {
     
       const handleCloseAddConditionModal = () => {
         setIsAddConditionModalOpen(null); // Close the add-condition modal
+        setSelectedConditions([]);        // Deselect all conditions
+        setSelectedCharacters([]);        // Deselect all characters
+      };
+
+      const [selectedConditions, setSelectedConditions] = useState([]);
+      const [selectedCharacters, setSelectedCharacters] = useState([]);
+
+      // Toggle selection for conditions
+      const handleConditionClick = (condition) => {
+        setSelectedConditions((prev) =>
+          prev.includes(condition)
+            ? prev.filter((c) => c !== condition)
+            : [...prev, condition]
+        );
+      };
+
+      const handleAddConditionSubmit = (e) => {
+        e.preventDefault();
+
+        // Copy rowData so we don't mutate state directly
+        const updatedRows = rowData.map(row => {
+          // If this character is selected, add all selected conditions (no duplicates)
+          if (selectedCharacters.includes(row.name)) {
+            const newConditions = [
+              ...row.conditions,
+              ...selectedConditions.filter(cond => !row.conditions.includes(cond))
+            ];
+            return { ...row, conditions: newConditions };
+          }
+          return row;
+        });
+
+        setRowData(updatedRows);
+        setIsAddConditionModalOpen(null); // or false, depending on your modal logic
+        setSelectedConditions([]);
+        setSelectedCharacters([]);
+      };
+
+      // Toggle selection for characters
+      const handleCharacterClick = (character) => {
+        setSelectedCharacters((prev) =>
+          prev.includes(character)
+            ? prev.filter((c) => c !== character)
+            : [...prev, character]
+        );
       };
 
       const conditionDescriptions = {
@@ -739,109 +784,48 @@ export default function MainCode() {
   <div className="modal-overlay add-condition-modal">
     <div className="condition-modal">
       <h2>Add Condition</h2>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault(); // Prevent default form submission behavior
-
-          // Get selected conditions
-          const selectedConditions = Array.from(
-            document.querySelectorAll('input[name="conditions"]:checked')
-          ).map((checkbox) => checkbox.value);
-
-          // Get selected characters
-          const selectedCharacters = Array.from(
-            document.querySelectorAll('input[name="characters"]:checked')
-          ).map((checkbox) => checkbox.value);
-
-          // Apply conditions to the selected characters only
-          selectedCharacters.forEach((characterName) => {
-            const rowIndex = rowData.findIndex((row) => row.name === characterName);
-            if (rowIndex !== -1) {
-              const updatedRow = { ...rowData[rowIndex] };
-              updatedRow.conditions = [
-                ...new Set([...updatedRow.conditions, ...selectedConditions]), // Avoid duplicate conditions
-              ];
-              rowData[rowIndex] = updatedRow; // Update the row data
-            }
-          });
-
-          setRowData([...rowData]); // Update the state with the modified rows
-          setIsAddConditionModalOpen(null); // Close the modal
-        }}
-      >
+      <form 
+         onSubmit={handleAddConditionSubmit}>
         {/* Choose Condition(s) Section */}
             <div className="conditions-section">
-            <div className="form-group">
+              <div className="form-group">
                 <label htmlFor="conditions">Choose Condition(s):</label>
                 <div className="conditions-checkbox-group">
-                {[
-                    'Blinded',
-                    'Charmed',
-                    'Deafened',
-                    'Frightened',
-                    'Grappled',
-                    'Incapacitated',
-                    'Invisible',
-                    'Paralyzed',
-                    'Petrified',
-                    'Poisoned',
-                    'Prone',
-                    'Restrained',
-                    'Stunned',
-                    'Unconscious',
-                    'Exhaustion1',
-                    'Exhaustion2',
-                    'Exhaustion3',
-                    'Exhaustion4',
-                    'Exhaustion5',
-                    'Exhaustion6',
-                    'Other1',
-                    'Other2',
-                    'Other3',
-                    '(Custom)',
-                ].map((condition) => (
-                    <div key={condition} className="checkbox-item">
-                    <input
-                        type="checkbox"
-                        id={`condition-${condition.toLowerCase().replace(/\s+/g, '-')}`}
-                        name="conditions"
-                        value={condition}
-                    />
-                    <label
-                        htmlFor={`condition-${condition.toLowerCase().replace(/\s+/g, '-')}`}
+                  {[
+                    'Blinded', 'Charmed', 'Deafened', 'Frightened', 'Grappled', 'Incapacitated',
+                    'Invisible', 'Paralyzed', 'Petrified', 'Poisoned', 'Prone', 'Restrained',
+                    'Stunned', 'Unconscious', 'Exhaustion1', 'Exhaustion2', 'Exhaustion3',
+                    'Exhaustion4', 'Exhaustion5', 'Exhaustion6', 'Other1', 'Other2', 'Other3', '(Custom)'
+                  ].map((condition) => (
+                    <div
+                      key={condition}
+                      className={`selectable-item${selectedConditions.includes(condition) ? ' selected' : ''}`}
+                      onClick={() => handleConditionClick(condition)}
                     >
-                        {condition}
-                    </label>
+                      {condition}
                     </div>
-                ))}
+                  ))}
                 </div>
-            </div>
+              </div>
             </div>
 
-        {/* Apply to Character(s) Section */}
             <div className="characters-section">
-            <div className="form-group">
+              <div className="form-group">
                 <label htmlFor="characters">Apply to Character(s):</label>
                 <div className="characters-checkbox-group">
-                {rowData
-                    .filter((row, index) => row.name && !overlayActive[index]) // Exclude unnamed characters and rows with an overlay
+                  {rowData
+                    .filter((row, index) => row.name && !overlayActive[index])
                     .map((row, index) => (
-                    <div key={index} className="checkbox-item">
-                        <input
-                        type="checkbox"
-                        id={`character-${row.name.toLowerCase().replace(/\s+/g, '-')}`}
-                        name="characters"
-                        value={row.name}
-                        />
-                        <label
-                        htmlFor={`character-${row.name.toLowerCase().replace(/\s+/g, '-')}`}
-                        >
+                      <div
+                        key={row.name}
+                        className={`selectable-item${selectedCharacters.includes(row.name) ? ' selected' : ''}`}
+                        onClick={() => handleCharacterClick(row.name)}
+                      >
                         {row.name}
-                        </label>
-                    </div>
+                      </div>
                     ))}
                 </div>
-            </div>
+              </div>
             </div>
 
         <div className="modal-button-group">

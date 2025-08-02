@@ -1,10 +1,7 @@
 # Upcoming Features
-• Conditions Scroll Bar (for when there are too many conditions to see on one screen) 
-• Add an "Other" condition
-• Make it so that you can click on the condition name to check it as well. 
-• Add a gear icon in the top left for some settings
-  • "New Combat": Removes all enemies, allies, and neutral (only keeps players), removes all conditions, sets the Round to 0, and makes it so there is not a shifted row
-  • "Full Reset": Removes everything except for the custom conditions
+• Conditions Scroll Bar (for when there are too many conditions to see on one screen)
+• Adding Customer Conditions
+• Expirations for Conditions
 
 # Getting Started with Create React App
 

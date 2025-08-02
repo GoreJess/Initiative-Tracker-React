@@ -38,6 +38,8 @@ export default function MainCode() {
 
     const [editCharacterIndex, setEditCharacterIndex] = useState(null);
 
+    const [viewCharacterIndex, setViewCharacterIndex] = useState(null);
+
     const handleAddConditionClick = (rowIndex) => {
         setIsAddConditionModalOpen(rowIndex); // Open the modal for the specific row
       };
@@ -98,6 +100,8 @@ export default function MainCode() {
             // const currentIndexInSorted = sortedRows.findIndex((row) => row.index === currentRowIndex);
             nextRowIndex = currentRowIndex + 1;
           }
+
+          setViewCharacterIndex(null);
       
           // Update the shifted row
           setShiftedRowIndex(nextRowIndex);
@@ -123,6 +127,8 @@ export default function MainCode() {
             // Otherwise, find the previous row in the sorted order
             previousRowIndex = currentRowIndex - 1;
           }
+
+          setViewCharacterIndex(null);
       
           // Update the shifted row
           setShiftedRowIndex(previousRowIndex);
@@ -198,6 +204,14 @@ export default function MainCode() {
       updatedData[index].initiative = value ? parseFloat(value) : null; // Save initiative value
       setRowData(updatedData);
     };
+
+    const updateViewCharacterIndex = (index) => {
+      if (viewCharacterIndex === index) {
+        setViewCharacterIndex(null);
+      } else {
+        setViewCharacterIndex(index);
+      }
+    }
 
     const getConditionBackgroundColor = (condition) => {
       const conditionColors = {
@@ -307,6 +321,7 @@ export default function MainCode() {
                 <div
                     key={index}
                     className={`row ${shiftedIndex === shiftedRowIndex ? 'shifted-row' : ''}`}
+                    style={{ backgroundColor: shiftedIndex === viewCharacterIndex ? 'var(--view-character-background)' : ''}}
                 >
                     {overlayActive[index] && (
                     <div className="add-new-character">
@@ -332,7 +347,7 @@ export default function MainCode() {
                       />
                     </div>
                     <div className="view-character-conditions">
-                      <button className="view-button">
+                      <button className="view-button" onClick={() => {updateViewCharacterIndex(shiftedIndex)}}>
                         <img src={viewIcon} alt="View Icon" className="view-icon" />
                       </button>
                     </div>
@@ -408,8 +423,54 @@ export default function MainCode() {
             </div>
 
             {/* Rows */}
-            <div className="conditions-list-content">
+            <div className="conditions-list-content"
+              style={{ backgroundColor: viewCharacterIndex !== null ? 'var(--view-character-background)' : '' }}
+            >
+              {
+                viewCharacterIndex !== null &&
+                sortedRowData[viewCharacterIndex] &&
+                rowData[sortedRowData[viewCharacterIndex].index] ? (
+                  rowData[sortedRowData[viewCharacterIndex].index].conditions.map((condition, i) => (
+                  <div key={condition + i} className="conditions-row">
+                    <div className="remove-condition">
+                      <button
+                        className="remove-condition-button"
+                        onClick={() => {
+                          // Remove this condition from the shifted row
+                          const updatedData = [...rowData];
+                          const realIndex = sortedRowData[shiftedRowIndex].index;
+                          updatedData[realIndex].conditions = updatedData[realIndex].conditions.filter(
+                            (c) => c !== condition
+                          );
+                          setRowData(updatedData);
+                        }}
+                        aria-label={`Remove ${condition}`}
+                      >
+                        <img src={minusIcon} alt="Remove Condition" />
+                      </button>
+                    </div>
+                    <div className="condition-description">
+                      <div>
+                        <strong>{condition}</strong>
+                      </div>
+                      <div>
+                        {(conditionDescriptions[condition] || "Filler description for this condition.")
+                          .split('\n')
+                          .map((line, idx) => (
+                            <React.Fragment key={idx}>
+                              {line}
+                              <br />
+                            </React.Fragment>
+                          ))}
+                      </div>
+                    </div>
+                    <div className="condition-expiration">Expires</div>
+                  </div>
+                ))
+                ) : null
+              }
               {shiftedRowIndex !== null &&
+              viewCharacterIndex === null &&
               sortedRowData[shiftedRowIndex] &&
               rowData[sortedRowData[shiftedRowIndex].index] &&
               rowData[sortedRowData[shiftedRowIndex].index].conditions.length > 0 ? (
@@ -450,14 +511,16 @@ export default function MainCode() {
                     <div className="condition-expiration">Expires</div>
                   </div>
                 ))
-              ) : (
-                <div className="conditions-row">
-                  <div className="remove-condition"></div>
-                  <div className="condition-description" style={{ textAlign: 'center', width: '100%' }}>
-                  </div>
-                  <div className="condition-expiration"></div>
-                </div>
-              )}
+              ) : null
+              // (
+              //   <div className="conditions-row">
+              //     <div className="remove-condition"></div>
+              //     <div className="condition-description" style={{ textAlign: 'center', width: '100%' }}>
+              //     </div>
+              //     <div className="condition-expiration"></div>
+              //   </div>
+              // )
+            }
             </div>
             </div>
         </div>

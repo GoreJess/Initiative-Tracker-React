@@ -1,8 +1,8 @@
 @import './1colors.css';
 
 .initiative-list {
-    display: grid; /* Use grid layout */
-    grid-template-rows: repeat(11, 1fr); /* Divide into 11 equal rows */
+    display: flex;
+    flex-direction: column;
     height: 100%; /* Full height of the container */
     box-sizing: border-box; /* Include padding and borders in size calculations */
     margin: 0; /* Remove any default margin */
@@ -18,6 +18,9 @@
     border: none;
     height: 100%;
     display: flex; /* Use Flexbox layout */
+    flex: 0 0 60px;
+    min-height: 60px;
+    max-height: 60px;
     align-items: center; /* Center content vertically */
     justify-content: space-between; /* Distribute space between columns */
     border-top-right-radius: 10px;
@@ -40,31 +43,8 @@
 }
 
 .gear-icon-img {
-  width: 70%;
-  height: 70%;
-}
-
-.settings-button-group {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  margin: 24px 0;
-}
-
-.settings-action-button {
-  padding: 12px 24px;
-  font-size: 1rem;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  background: var(--initiative-banner, #333);
-  color: white;
-  font-weight: bold;
-  transition: background 0.2s;
-}
-
-.settings-action-button:hover {
-  background: #222;
+  width: 50%;
+  height: 50%;
 }
 
   .round-counter {
@@ -77,7 +57,7 @@
   }
  
   .initiative-title {
-    flex: 0 0 52%; /* Take up 40% of the width */
+    flex: 0 0 55%; /* Take up 40% of the width */
     height: 100%; /* Ensure it fills its container */
     display: flex;
     align-items: center;
@@ -122,30 +102,71 @@
   .next-button:active {
     background-color: lightgray; /* Change to light gray when clicked */
   }
- 
-  .initiative-list > div {
-    display: flex; /* Center content inside each row */
-    align-items: center; /* Center vertically */
-    justify-content: center; /* Center horizontally */
-    box-sizing: border-box; /* Ensure borders are included in the size */
-    width: 100%; /* Ensure each row takes up the full width */
-    margin: 0; /* Remove any default margin */
-    padding: 0; /* Remove any default padding */
-    border-top: 1px solid black; /* Add a border only at the top */
-  }
- 
-  .initiative-list > div:first-child {
-    border-top: none; /* Remove the top border for the first row */
-  }
 
+  .initiative-list-content {
+  position: relative;
+  flex: 1 1 0;
+  overflow-y: visible;
+  min-height: 0;
+  max-height: 100%;
+  box-sizing: border-box;
+  direction: rtl; /* Scrollbar on the left */
+  scrollbar-width: thin;
+  scrollbar-color: var(--initiative-banner, #333) transparent;
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+  box-sizing: border-box; /* Ensure borders are included in the size */
+  width: 100%; /* Ensure each row takes up the full width */
+  margin: 0; /* Remove any default margin */
+  padding: 0; /* Remove any default padding */
+}
 
-  .row {
-    position: relative; /* Make the row a positioned container for the overlay */
-    display: flex;
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-  }
+/* Webkit: Hide scrollbar unless scrolling */
+.initiative-list-content::-webkit-scrollbar {
+  width: 8px;
+  background: transparent;
+  transition: background 0.3s;
+  left: 0;
+}
+.initiative-list-content:hover::-webkit-scrollbar,
+.initiative-list-content:active::-webkit-scrollbar,
+.initiative-list-content:focus::-webkit-scrollbar {
+  background: rgba(0,0,0,0.1);
+}
+.initiative-list-content::-webkit-scrollbar-thumb {
+  background: var(--initiative-banner, #333);
+  border-radius: 4px;
+  opacity: 0.7;
+}
+.initiative-list-content:not(:hover):not(:active):not(:focus)::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+/* For Firefox: hide scrollbar unless scrolling */
+.initiative-list-content {
+  scrollbar-width: thin;
+  scrollbar-color: var(--initiative-banner, #333) transparent;
+}
+
+/* Reset text direction for children so content isn't reversed */
+.initiative-list-content > * {
+  direction: ltr;
+}
+
+.row {
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-height: 10%;      /* Minimum height is 1/10th of the container */
+  box-sizing: border-box;
+  flex: 1 1 0;          /* Allow row to grow if content overflows */
+  align-items: center;;
+  /* Remove fixed height so it can grow */
+  height: auto;
+  border-top: 1px solid black; /* Add a border only at the top */
+  transition: transform 0.5s ease, left 0.5s ease;
+  z-index: 1;
+}
  
   .add-new-character {
     position: absolute; /* Position the overlay on top of the row */

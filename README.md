@@ -1,7 +1,10 @@
 # Upcoming Features
-• Conditions Scroll Bar (for when there are too many conditions to see on one screen)
-• Adding Customer Conditions
+• When pressing "Next" jump to current character (up or down, depending on what's needed)
+• Settings Gear: Tick boxes to select which things to remove to reset the combat.
+• Add Condition must select a Character
+• Adding Custom Conditions
 • Expirations for Conditions
+• Add a note explaining that the Conditions are using 2024 Rules
 
 # Getting Started with Create React App
 

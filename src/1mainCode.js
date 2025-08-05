@@ -469,6 +469,7 @@ export default function MainCode() {
                 )}
               </div>
             </div>
+            <div className="initiative-list-content">
             {sortedRowData.map(({ index }, shiftedIndex) => (
                 <div
                     key={index}
@@ -561,6 +562,7 @@ export default function MainCode() {
                     </div>
                 </div>
                 ))}
+          </div>
           </div>
           <div className="conditions-list">
             {/* Banner */}

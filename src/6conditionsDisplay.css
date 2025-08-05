@@ -3,10 +3,12 @@
 .conditions-list {
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
     border: 1px solid #ccc; /* Optional: Add a border for visibility */
     border-radius: 10px;
     overflow: hidden;
     height: 100%; /* Adjust height as needed */
+    min-height: 0; /* For flexbox scrolling */
   }
   
   .conditions-list-banner {
@@ -16,7 +18,8 @@
     font-size: XX-large;
     font-weight: bold;
     width: 100%; /* Ensure it spans the full width of the box */
-    flex: 1; /* Take up 1/11th of the height */
+    max-height: 60px;
+    flex: 0 0 60px; /* Fixed height, adjust as needed */
     display: flex;
     align-items: center; /* Center text vertically */
     justify-content: center; /* Space out the text and button */
@@ -59,12 +62,40 @@
     background-color: gray;
   }
   
-  .conditions-list-content {
-    display: flex;
-    flex-direction: column;
-    flex: 10; /* Take up 10/11ths of the height */
-    width: 100%;
-  }
+ .conditions-list-content {
+  flex: 1 1 0;
+  overflow-y: auto;
+  min-height: 0;
+  box-sizing: border-box;
+  /* Hide scrollbar by default, show on scroll (Webkit) */
+  scrollbar-width: thin;
+  scrollbar-color: var(--condition-list-banner-background, #333) transparent;
+}
+
+  .conditions-list-content::-webkit-scrollbar {
+  width: 8px;
+  background: transparent;
+  transition: background 0.3s;
+}
+.conditions-list-content:hover::-webkit-scrollbar,
+.conditions-list-content:active::-webkit-scrollbar,
+.conditions-list-content:focus::-webkit-scrollbar {
+  background: rgba(0,0,0,0.1);
+}
+.conditions-list-content::-webkit-scrollbar-thumb {
+  background: var(--condition-list-banner-background, #333);
+  border-radius: 4px;
+  opacity: 0.7;
+}
+.conditions-list-content:not(:hover):not(:active):not(:focus)::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+/* For Firefox: hide scrollbar unless scrolling */
+.conditions-list-content {
+  scrollbar-width: thin;
+  scrollbar-color: var(--condition-list-banner-background, #333) transparent;
+}
   
   .conditions-row {
     display: flex;

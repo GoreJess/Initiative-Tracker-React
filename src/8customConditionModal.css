@@ -1,0 +1,70 @@
+@import './1colors.css';
+  
+.custom-condition-modal {
+  background-color: var(--condition-modal-background); /* ✅ this will now apply */
+  padding: 20px;
+  border-radius: 10px;
+  width: 200px;
+  margin-left: 5px; /* space between the two modals */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  position: relative;
+  z-index: 1; /* same level as other modal */
+}
+
+.new-custom-condition-button {
+    justify-content: center;
+}
+
+.new-custom-condition-button {
+background-color: #002366;
+color: white;
+border: none;
+border-radius: 5px;
+padding: 10px 15px;
+cursor: pointer;
+}
+
+.new-custom-condition-button:hover {
+background-color: #0056b3;
+}
+
+.affect-buttons button.selected {
+  background-color: red;
+  color: white;
+  font-weight: bold;
+}
+
+.custom-condition-list {
+  margin-top: 12px;
+  text-align: left;
+}
+
+.custom-condition-item {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+/* Text color only, no background */
+.custom-condition-item.positive {
+  color: green;
+}
+
+.custom-condition-item.neutral {
+  color: black;
+}
+
+.custom-condition-item.negative {
+  color: red;
+}
+
+.no-custom-conditions {
+  margin-left: 10px;
+  font-style: italic;
+  color: gray;
+}
+
+.selectable-item.positive { color: green; }
+.selectable-item.neutral { color: gray; }
+.selectable-item.negative { color: red; }

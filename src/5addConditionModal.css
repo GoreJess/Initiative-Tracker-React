@@ -17,12 +17,19 @@
     background-color: var(--condition-modal-background);
     padding: 20px;
     border-radius: 10px;
-    width: 600px;
+    width: 700px;
     max-width: 90%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
     position: relative;
   }
+
+.dual-modal-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+}
 
   .selectable-item {
   padding: 6px 6px;
@@ -71,7 +78,7 @@
   .conditions-checkbox-group,
   .characters-checkbox-group {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Create 3 equal-width columns */
+  grid-template-columns: repeat(5, 1fr); /* Create 3 equal-width columns */
   gap: 10px; /* Add spacing between the checkboxes */
   margin-top: 10px;
 }

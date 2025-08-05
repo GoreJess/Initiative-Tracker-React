@@ -11,6 +11,7 @@ import threeDots from './media/three-dots.png';
 import './7deleteCharacterModal.css';
 import minusIcon from './media/minus-icon.png';
 import gearIcon from './media/gear-icon.png';
+import './8customConditionModal.css';
 
 export default function MainCode() {
 
@@ -125,6 +126,7 @@ export default function MainCode() {
         setIsAddConditionModalOpen(null); // Close the add-condition modal
         setSelectedConditions([]);        // Deselect all conditions
         setSelectedCharacters([]);        // Deselect all characters
+        setIsCustomConditionModalOpen(false);
       };
 
       const [selectedConditions, setSelectedConditions] = useState([]);
@@ -132,6 +134,12 @@ export default function MainCode() {
 
       // Toggle selection for conditions
       const handleConditionClick = (condition) => {
+        if (condition === '(Custom)') {
+        const isAlreadySelected = selectedConditions.includes(condition);
+        setIsCustomConditionModalOpen(!isAlreadySelected); // toggle modal open/close
+        setShowCustomConditionForm(false); // always reset the form view
+      }
+
         setSelectedConditions((prev) =>
           prev.includes(condition)
             ? prev.filter((c) => c !== condition)
@@ -160,6 +168,32 @@ export default function MainCode() {
         setSelectedConditions([]);
         setSelectedCharacters([]);
       };
+
+      const [isCustomConditionModalOpen, setIsCustomConditionModalOpen] = useState(false);
+
+      const handleAddNewCustomCondition = () => {
+        alert("Add Custom Condition clicked!");
+        // Later, this could open a form, input, or prompt for condition name and description
+      };
+
+      const handleAddCustomCondition = () => {
+        if (customConditionName.trim() !== '') {
+          setCustomConditions([...customConditions, customConditionName.trim()]);
+          setCustomConditionName('');
+          setCustomConditionAffect('');
+          setCustomConditionDescription('');
+          setShowCustomConditionForm(false); // Hide form again
+        }
+      };
+
+
+      const [showCustomConditionForm, setShowCustomConditionForm] = useState(false);
+      const [customConditionName, setCustomConditionName] = useState('');
+      const [customConditionAffect, setCustomConditionAffect] = useState('');
+      const [customConditionDescription, setCustomConditionDescription] = useState('');
+
+      const [customConditions, setCustomConditions] = useState([]);
+
 
       // Toggle selection for characters
       const handleCharacterClick = (character) => {
@@ -349,6 +383,7 @@ export default function MainCode() {
         Other1: 'var(--neutral-condition-background)',
         Other2: 'var(--neutral-condition-background)',
         Other3: 'var(--neutral-condition-background)',
+        Other4: 'var(--neutral-condition-background)',
         '(Custom)': 'var(--neutral-condition-background)',
       };
     
@@ -783,70 +818,192 @@ export default function MainCode() {
 
 {/* Add-Condition Modal */}
 {isAddConditionModalOpen !== null && (
-  <div className="modal-overlay add-condition-modal">
-    <div className="condition-modal">
-      <h2>Add Condition</h2>
-      <form 
-         onSubmit={handleAddConditionSubmit}>
-        {/* Choose Condition(s) Section */}
-            <div className="conditions-section">
-              <div className="form-group">
-                <label htmlFor="conditions">Choose Condition(s):</label>
-                <div className="conditions-checkbox-group">
-                  {[
-                    'Blinded', 'Charmed', 'Deafened', 'Frightened', 'Grappled', 'Incapacitated',
-                    'Invisible', 'Paralyzed', 'Petrified', 'Poisoned', 'Prone', 'Restrained',
-                    'Stunned', 'Unconscious', 'Exhaustion1', 'Exhaustion2', 'Exhaustion3',
-                    'Exhaustion4', 'Exhaustion5', 'Exhaustion6', 'Other1', 'Other2', 'Other3', '(Custom)'
-                  ].map((condition) => (
+  <div className="modal-overlay">
+    <div className="dual-modal-wrapper">
+      <div className="condition-modal">
+        <h2>Add Condition</h2>
+        <form onSubmit={handleAddConditionSubmit}>
+          {/* Choose Condition(s) Section */}
+          <div className="conditions-section">
+            <div className="form-group">
+              <label htmlFor="conditions">Choose Condition(s):</label>
+              <div className="conditions-checkbox-group">
+                {[
+                  'Blinded', 'Charmed', 'Deafened', 'Frightened', 'Grappled', 'Incapacitated',
+                  'Invisible', 'Paralyzed', 'Petrified', 'Poisoned', 'Prone', 'Restrained',
+                  'Stunned', 'Unconscious', 'Exhaustion1', 'Exhaustion2', 'Exhaustion3',
+                  'Exhaustion4', 'Exhaustion5', 'Exhaustion6', 'Other1', 'Other2', 'Other3', 'Other4', '(Custom)'
+                ].map((condition) => (
+                  <div
+                    key={condition}
+                    className={`selectable-item${selectedConditions.includes(condition) ? ' selected' : ''}`}
+                    onClick={() => {
+                      handleConditionClick(condition);
+
+                      if (condition === '(Custom)') {
+                        if (selectedConditions.includes('(Custom)')) {
+                          // If already selected, clicking again deselects it — so close the modal
+                          setIsCustomConditionModalOpen(false);
+                        } else {
+                          // If not selected, clicking selects it — so open the modal
+                          setIsCustomConditionModalOpen(true);
+                        }
+                      }
+                    }}
+
+                  >
+                    {condition}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="characters-section">
+            <div className="form-group">
+              <label htmlFor="characters">Apply to Character(s):</label>
+              <div className="characters-checkbox-group">
+                {rowData
+                  .filter((row, index) => row.name && !overlayActive[index])
+                  .map((row, index) => (
                     <div
-                      key={condition}
-                      className={`selectable-item${selectedConditions.includes(condition) ? ' selected' : ''}`}
-                      onClick={() => handleConditionClick(condition)}
+                      key={row.name}
+                      className={`selectable-item${selectedCharacters.includes(row.name) ? ' selected' : ''}`}
+                      onClick={() => handleCharacterClick(row.name)}
                     >
-                      {condition}
+                      {row.name}
                     </div>
                   ))}
-                </div>
               </div>
             </div>
+          </div>
 
-            <div className="characters-section">
-              <div className="form-group">
-                <label htmlFor="characters">Apply to Character(s):</label>
-                <div className="characters-checkbox-group">
-                  {rowData
-                    .filter((row, index) => row.name && !overlayActive[index])
-                    .map((row, index) => (
-                      <div
-                        key={row.name}
-                        className={`selectable-item${selectedCharacters.includes(row.name) ? ' selected' : ''}`}
-                        onClick={() => handleCharacterClick(row.name)}
+          <div className="modal-button-group">
+            <div className="submit-button-container">
+              <button className="submit-button">Submit</button>
+            </div>
+            <button
+              type="button"
+              className="close-modal-button"
+              onClick={handleCloseAddConditionModal}
+            >
+              X
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {isCustomConditionModalOpen && (
+        <div className="custom-condition-modal">
+          <h3>Custom Condition</h3>
+            {!showCustomConditionForm ? (
+              <div className="modal-button-group">
+                <button onClick={() => setShowCustomConditionForm(true)}>
+                  Add New Custom Condition
+                </button>
+              </div>
+            ) : (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+
+                  const newName = customConditionName.trim();
+                  if (!newName) return;
+
+                  setCustomConditions((prevConditions) =>
+                    [...prevConditions, {
+                      name: newName,
+                      affect: customConditionAffect,
+                      description: customConditionDescription,
+                    }].sort((a, b) => a.name.localeCompare(b.name))
+                  );
+
+
+                  setShowCustomConditionForm(false);
+                  setCustomConditionName('');
+                  setCustomConditionAffect('');
+                  setCustomConditionDescription('');
+                }}
+            >
+                <div className="form-group">
+                  <label>Name</label>
+                  <textarea
+                    value={customConditionName}
+                    onChange={(e) => setCustomConditionName(e.target.value)}
+                    rows={1}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Affect</label>
+                  <div className="affect-buttons">
+                    {['Positive', 'Neutral', 'Negative'].map((type) => (
+                      <button
+                        type="button"
+                        key={type}
+                        className={customConditionAffect === type ? 'selected' : ''}
+                        onClick={() => setCustomConditionAffect(type)}
                       >
-                        {row.name}
-                      </div>
+                        {type}
+                      </button>
                     ))}
+                  </div>
                 </div>
-              </div>
-            </div>
 
-        <div className="modal-button-group">
-        <div className="submit-button-container">
-            <button className="submit-button">Submit</button>
+                <div className="form-group">
+                  <label>Description</label>
+                  <textarea
+                    value={customConditionDescription}
+                    onChange={(e) => setCustomConditionDescription(e.target.value)}
+                    rows={3}
+                  />
+                </div>
+
+                <div className="modal-button-group">
+                  <button type="submit">Add Condition</button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowCustomConditionForm(false); // Hide the form
+                      setCustomConditionName('');        // Clear name input
+                      setCustomConditionAffect('');      // Clear affect selection
+                      setCustomConditionDescription(''); // Clear description
+                    }}
+                  >
+                    Cancel
+                  </button>
+
+                </div>
+              </form>
+              )}
+              {!showCustomConditionForm && (
+                <div className="custom-condition-list">
+                  {customConditions.length > 0 ? (
+                    customConditions.map((condition, index) => {
+                      const isSelected = selectedConditions.includes(condition.name);
+
+                      return (
+                        <div
+                          key={index}
+                          className={`selectable-item ${condition.affect?.toLowerCase()}${isSelected ? ' selected' : ''}`}
+                          onClick={() => handleConditionClick(condition.name)}
+                        >
+                          {condition.name}
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <p className="no-custom-conditions">No custom conditions added yet.</p>
+                  )}
+                </div>
+              )}
+
         </div>
-          <button
-            type="button"
-            className="close-modal-button"
-            onClick={handleCloseAddConditionModal}
-          >
-            X
-          </button>
-        </div>
-      </form>
+      )}
     </div>
   </div>
 )}
-            </div>
-        </>
-        );
+              </div>
+          </>
+          );
         }

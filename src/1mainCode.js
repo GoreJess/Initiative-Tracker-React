@@ -898,11 +898,9 @@ export default function MainCode() {
         <div className="custom-condition-modal">
           <h3>Custom Condition</h3>
             {!showCustomConditionForm ? (
-              <div className="modal-button-group">
-                <button onClick={() => setShowCustomConditionForm(true)}>
-                  Add New Custom Condition
+                <button onClick={() => setShowCustomConditionForm(true)} className="new-custom-condition-button">
+                  New Custom Condition
                 </button>
-              </div>
             ) : (
               <form
                 onSubmit={(e) => {
@@ -942,12 +940,13 @@ export default function MainCode() {
                       <button
                         type="button"
                         key={type}
-                        className={customConditionAffect === type ? 'selected' : ''}
+                        className={`${customConditionAffect === type ? 'selected' : ''} ${type.toLowerCase()}`}
                         onClick={() => setCustomConditionAffect(type)}
                       >
                         {type}
                       </button>
                     ))}
+
                   </div>
                 </div>
 
@@ -977,6 +976,7 @@ export default function MainCode() {
                 </div>
               </form>
               )}
+              <div className="custom-condition-content">
               {!showCustomConditionForm && (
                 <div className="custom-condition-list">
                   {customConditions.length > 0 ? (
@@ -998,7 +998,7 @@ export default function MainCode() {
                   )}
                 </div>
               )}
-
+          </div>
         </div>
       )}
     </div>

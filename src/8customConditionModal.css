@@ -10,6 +10,14 @@
   text-align: center;
   position: relative;
   z-index: 1; /* same level as other modal */
+  max-height: 600px;       /* maximum height */
+}
+
+.custom-condition-content {
+    max-height: 475px;
+    overflow-y: auto;        /* enable vertical scrolling if content is taller */
+    scrollbar-width: thin;
+    scrollbar-color: #002366 transparent;
 }
 
 .new-custom-condition-button {
@@ -29,11 +37,48 @@ cursor: pointer;
 background-color: #0056b3;
 }
 
-.affect-buttons button.selected {
+.affect-buttons button.positive {
+background-color: #002366;
+color: white;
+border: none;
+border-radius: 5px;
+padding: 5px;
+cursor: pointer;
+}
+
+.affect-buttons button.neutral {
+background-color: #002366;
+color: white;
+border: none;
+border-radius: 5px;
+padding: 5px;
+cursor: pointer;
+}
+
+.affect-buttons button.negative {
+background-color: #002366;
+color: white;
+border: none;
+border-radius: 5px;
+padding: 5px;
+cursor: pointer;
+}
+
+.affect-buttons button.selected.positive {
+  background-color: green;
+  color: white;
+}
+
+.affect-buttons button.selected.neutral {
+  background-color: gray;
+  color: white;
+}
+
+.affect-buttons button.selected.negative {
   background-color: red;
   color: white;
-  font-weight: bold;
 }
+
 
 .custom-condition-list {
   margin-top: 12px;

@@ -256,6 +256,23 @@
     min-width: 0;
     height: 100%;
   }
+
+/* Example: in your CSS file */
+.positive {
+  background-color: var(--good-condition-background); /* green */
+  color: white;
+}
+
+.neutral {
+  background-color: var(--neutral-condition-background); /* gray */
+  color: white;
+}
+
+.negative {
+  background-color: var(--bad-condition-background); /* red */
+  color: white;
+}
+
  
   .view-button {
     background-color: transparent;

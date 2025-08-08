@@ -150,13 +150,13 @@ export default function MainCode() {
       const handleAddConditionSubmit = (e) => {
         e.preventDefault();
 
-        // Copy rowData so we don't mutate state directly
+        const filteredSelectedConditions = selectedConditions.filter(cond => cond !== '(Custom)');
+
         const updatedRows = rowData.map(row => {
-          // If this character is selected, add all selected conditions (no duplicates)
           if (selectedCharacters.includes(row.name)) {
             const newConditions = [
               ...row.conditions,
-              ...selectedConditions.filter(cond => !row.conditions.includes(cond))
+              ...filteredSelectedConditions.filter(cond => !row.conditions.includes(cond))
             ];
             return { ...row, conditions: newConditions };
           }
@@ -164,10 +164,12 @@ export default function MainCode() {
         });
 
         setRowData(updatedRows);
-        setIsAddConditionModalOpen(null); // or false, depending on your modal logic
+        setIsAddConditionModalOpen(null);
         setSelectedConditions([]);
         setSelectedCharacters([]);
+        setIsCustomConditionModalOpen(false);
       };
+
 
       const [isCustomConditionModalOpen, setIsCustomConditionModalOpen] = useState(false);
 
@@ -191,7 +193,6 @@ export default function MainCode() {
       const [customConditionName, setCustomConditionName] = useState('');
       const [customConditionAffect, setCustomConditionAffect] = useState('');
       const [customConditionDescription, setCustomConditionDescription] = useState('');
-
       const [customConditions, setCustomConditions] = useState([]);
 
 

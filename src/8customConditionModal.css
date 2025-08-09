@@ -18,6 +18,12 @@
     overflow-y: auto;        /* enable vertical scrolling if content is taller */
     scrollbar-width: thin;
     scrollbar-color: #002366 transparent;
+    text-align: left;
+}
+
+.custom-condition-content,
+.custom-condition-list {
+  text-align: left; /* force list content to align left */
 }
 
 .new-custom-condition-button {
@@ -83,12 +89,17 @@ cursor: pointer;
 .custom-condition-list {
   margin-top: 12px;
   text-align: left;
+  padding-left: 4px;
 }
 
 .custom-condition-item {
   font-size: 16px;
   font-weight: 500;
   margin-bottom: 4px;
+  text-align: left;             /* in case the item itself inherited center text */
+  flex: 1;                       /* so text takes remaining space next to the icon */
+  white-space: normal;           /* allow wrapping */
+  word-break: break-word;        /* break long words if needed */
 }
 
 /* Text color only, no background */
@@ -113,3 +124,41 @@ cursor: pointer;
 .selectable-item.positive { color: green; }
 .selectable-item.neutral { color: gray; }
 .selectable-item.negative { color: red; }
+
+.condition-icon {
+  width: 16px !important;      /* override any inline or SVG file sizing */
+  height: 16px !important;
+  flex-shrink: 0;               /* prevents it from squishing in flex layouts */
+  display: inline-block;
+  object-fit: contain;          /* keep proportions */
+}
+
+
+.remove-condition-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.remove-condition-button:hover .condition-icon {
+  filter: brightness(0.8);
+}
+
+.selectable-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;  /* ✅ keep items left-aligned */
+  text-align: left;             /* ✅ ensure text wraps left */
+}
+
+.custom-condition-modal .selectable-item {
+  text-align: left;
+  justify-content: flex-start;
+}

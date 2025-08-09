@@ -42,6 +42,11 @@
   font-weight: normal;
 }
 
+.condition-modal .selectable-item {
+  text-align: center;
+  justify-content: center;
+}
+
 .selectable-item.selected {
   background: #002366; /* dark blue */
   color: white;

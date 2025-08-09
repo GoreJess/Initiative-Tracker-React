@@ -70,6 +70,7 @@
   /* Hide scrollbar by default, show on scroll (Webkit) */
   scrollbar-width: thin;
   scrollbar-color: var(--condition-list-banner-background, #333) transparent;
+  width: 100%;
 }
 
   .conditions-list-content::-webkit-scrollbar {
@@ -124,6 +125,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.conditions-list .remove-condition-button img {
+  width: 20px; /* adjust to taste */
+  height: 20px;
 }
 
 .remove-condition-button img {

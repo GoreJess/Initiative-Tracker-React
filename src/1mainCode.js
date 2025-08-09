@@ -989,6 +989,22 @@ export default function MainCode() {
                           className={`selectable-item ${condition.affect?.toLowerCase()}${isSelected ? ' selected' : ''}`}
                           onClick={() => handleConditionClick(condition.name)}
                         >
+                          <button
+                            type="button"
+                            className="remove-condition-button"
+                            onClick={(e) => {
+                              e.stopPropagation(); // prevent also selecting the item
+                              setCustomConditions((prevConditions) =>
+                                prevConditions.filter((_, i) => i !== index)
+                              );
+                            }}
+                          >
+                            <img
+                              src={require('./media/minus-icon.png')}
+                              alt="Remove"
+                              className="condition-icon"
+                            />
+                          </button>
                           {condition.name}
                         </div>
                       );

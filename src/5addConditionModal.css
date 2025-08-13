@@ -17,17 +17,32 @@
     background-color: var(--condition-modal-background);
     padding: 20px;
     border-radius: 10px;
-    width: 700px;
+    width: 1000px;
     max-width: 90%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
     position: relative;
   }
 
+
 .dual-modal-wrapper {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  align-items: flex-start;
+}
+
+.characters-conditions {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  align-items: stretch;
+}
+
+.expiration-n-submit-button {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
   align-items: flex-start;
 }
 
@@ -64,6 +79,7 @@
 
   .conditions-section {
     background-color: var(--condition-modal-section-background);
+    flex: 1 1 0;
     padding: 15px; /* Add padding for spacing */
     border-radius: 10px; /* Optional: Add rounded corners */
     margin-bottom: 20px; /* Add spacing below the section */
@@ -71,6 +87,7 @@
 
   .characters-section {
     background-color: var(--condition-modal-section-background);
+    flex: 0 0 1; /* Fixed width for character list */
     padding: 15px; /* Add padding for spacing */
     border-radius: 10px; /* Optional: Add rounded corners */
     margin-bottom: 20px; /* Add spacing below the section */
@@ -80,8 +97,19 @@
     margin: 0; /* Remove default margin from the form group */
   }
 
-  .conditions-checkbox-group,
-  .characters-checkbox-group {
+.characters-checkbox-group {
+  display: flex;
+  flex-direction: column; /* Stack character names vertically */
+  gap: 3px;
+}
+
+.conditions-checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+  .conditions-checkbox-group {
   display: grid;
   grid-template-columns: repeat(5, 1fr); /* Create 3 equal-width columns */
   gap: 10px; /* Add spacing between the checkboxes */
@@ -96,17 +124,40 @@
 .checkbox-item input[type="checkbox"] {
   margin-right: 5px;
 }
-  
-  .modal-button-group {
-    display: flex;
-    margin-top: 20px;
-  }
 
-  .submit-button-container {
-    width: 100%;
-    justify-content: right;
-  }  
-  
+.condition-expiration-selection {
+  width: 100%;
+  min-height: 48px;
+  background-color: var(--condition-modal-section-background);
+  border-radius: 8px;
+  margin: 5px 0 0 0;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  gap: 8px;
+}
+
+.condition-expiration-label {
+  color: black;
+  font-size: large;
+  font-weight: bold;
+  margin-right: 12px;
+}
+
+.condition-expiration-dropdown {
+  padding: 6px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.submit-button-container {
+  width: 100%;
+  justify-content: right;
+  align-items: center;
+  background-color: yellow;
+}
+
   .submit-button {
     background-color: #002366;
     color: white;

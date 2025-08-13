@@ -817,6 +817,26 @@ export default function MainCode() {
         <h2>Add Condition</h2>
         <form onSubmit={handleAddConditionSubmit}>
           {/* Choose Condition(s) Section */}
+          <div className="characters-conditions">
+          <div className="characters-section">
+            <div className="form-group">
+              <label htmlFor="characters">Apply to Character(s):</label>
+              <div className="characters-checkbox-group">
+                {rowData
+                  .filter((row, index) => row.name && !overlayActive[index])
+                  .sort((a, b) => a.name.localeCompare(b.name)) // <-- Add this line
+                  .map((row, index) => (
+                    <div
+                      key={row.name}
+                      className={`selectable-item${selectedCharacters.includes(row.name) ? ' selected' : ''}`}
+                      onClick={() => handleCharacterClick(row.name)}
+                    >
+                      {row.name}
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </div>
           <div className="conditions-section">
             <div className="form-group">
               <label htmlFor="conditions">Choose Condition(s):</label>
@@ -851,37 +871,38 @@ export default function MainCode() {
               </div>
             </div>
           </div>
-
-          <div className="characters-section">
-            <div className="form-group">
-              <label htmlFor="characters">Apply to Character(s):</label>
-              <div className="characters-checkbox-group">
-                {rowData
-                  .filter((row, index) => row.name && !overlayActive[index])
-                  .map((row, index) => (
-                    <div
-                      key={row.name}
-                      className={`selectable-item${selectedCharacters.includes(row.name) ? ' selected' : ''}`}
-                      onClick={() => handleCharacterClick(row.name)}
-                    >
-                      {row.name}
-                    </div>
-                  ))}
-              </div>
-            </div>
           </div>
-
-          <div className="modal-button-group">
-            <div className="submit-button-container">
-              <button className="submit-button">Submit</button>
+          <div className="expiration-n-submit-button">
+            <div className="condition-expiration-selection">
+              <label htmlFor="condition-expiration-dropdown" className="condition-expiration-label">
+                Condition Expiration:
+              </label>
+              <select
+                id="condition-expiration-dropdown"
+                className="condition-expiration-dropdown"
+                // value={selectedExpiration}
+                // onChange={e => setSelectedExpiration(e.target.value)}
+              >
+                <option value="unknown">NA / Unknown</option>
+                {[...Array(11)].map((_, i) => (
+                  <option key={i} value={`round-${round + i}`}>
+                    Round {round + i}
+                  </option>
+                ))}
+              </select>
             </div>
-            <button
-              type="button"
-              className="close-modal-button"
-              onClick={handleCloseAddConditionModal}
-            >
-              X
-            </button>
+            <div className="modal-button-group">
+              <div className="submit-button-container">
+                <button className="submit-button">Submit</button>
+              </div>
+              <button
+                type="button"
+                className="close-modal-button"
+                onClick={handleCloseAddConditionModal}
+              >
+                X
+              </button>
+            </div>
           </div>
         </form>
       </div>

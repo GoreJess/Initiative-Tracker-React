@@ -546,6 +546,7 @@ export default function MainCode() {
                     <button className="view-button" onClick={() => { updateViewCharacterIndex(shiftedIndex); }}>
                       <img src={viewIcon} alt="View Icon" className="view-icon" />
                     </button>
+                    <div className="edit-delete-group">
                     <button
                       className="editCharacterButton"
                       onClick={() => {
@@ -565,6 +566,7 @@ export default function MainCode() {
                     >
                       <img src={trashcanIcon} alt="Delete" className="delete-icon" />
                     </button>
+                    </div>
                   </div>
                   {/* Remove the character-menu and dropdown */}
                   <div className="name-input" style={{ color: getTextColor(rowData[index].affiliation) }}>

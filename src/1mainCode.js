@@ -12,6 +12,8 @@ import './7deleteCharacterModal.css';
 import minusIcon from './media/minus-icon.png';
 import gearIcon from './media/gear-icon.png';
 import './8customConditionModal.css';
+import pencilIcon from './media/pencil-icon.png';
+import trashcanIcon from './media/trashcan-icon.png';
 
 export default function MainCode() {
 
@@ -506,99 +508,87 @@ export default function MainCode() {
               </div>
             </div>
             <div className="initiative-list-content">
-            {sortedRowData.map(({ index }, shiftedIndex) => (
+              {sortedRowData.map(({ index }, shiftedIndex) => (
                 <div
-                    key={index}
-                    className={`row ${shiftedIndex === shiftedRowIndex ? 'shifted-row' : ''}`}
-                    style={{ backgroundColor: shiftedIndex === viewCharacterIndex ? 'var(--view-character-background)' : ''}}
+                  key={index}
+                  className={`row ${shiftedIndex === shiftedRowIndex ? 'shifted-row' : ''}`}
+                  style={{
+                    backgroundColor:
+                      shiftedIndex === viewCharacterIndex
+                        ? 'var(--view-character-background)'
+                        : ''
+                  }}
                 >
-                    {overlayActive[index] && (
+                  {overlayActive[index] && (
                     <div className="add-new-character">
-                        <button
+                      <button
                         className="add-character-button"
                         onClick={() => handleOpenModal(index)}
-                        >
-                        <img
-                            src={plusIcon}
-                            alt="Add Character"
-                            className="add-character-icon"
-                        />
-                        </button>
-                    </div>
-                    )}
-                    <div className="initiative-input">
-                      <input
-                        type="number"
-                        className="initiative-textbox"
-                        placeholder="#"
-                        value={rowData[index].initiative ?? ''}
-                        onChange={(e) => handleInitiativeChange(index, e.target.value)}
-                      />
-                    </div>
-                    <div className="view-character-conditions">
-                      <button className="view-button" onClick={() => {updateViewCharacterIndex(shiftedIndex)}}>
-                        <img src={viewIcon} alt="View Icon" className="view-icon" />
-                      </button>
-                    </div>
-                    <div className="character-menu" style={{ position: 'relative' }}>
-                      <button
-                        className="character-menu-dots"
-                        onMouseDown={(e) => {
-                          e.stopPropagation(); // Prevent the document handler from firing
-                          setOpenMenuIndex(openMenuIndex === index ? null : index);
-                        }}
-                        type="button"
                       >
-                        <img src={threeDots} alt="Menu" className="character-menu-icon" />
+                        <img
+                          src={plusIcon}
+                          alt="Add Character"
+                          className="add-character-icon"
+                        />
                       </button>
-                      {openMenuIndex === index && (
-                        <div className="character-dropdown-menu" ref={dropdownRef}>
-                          <button
-                            className="dropdown-item"
-                            onClick={() => {
-                              setEditCharacterIndex(index);
-                              setCharacterName(rowData[index].name);
-                              setAffiliation(rowData[index].affiliation);
-                              setIsModalOpen(index); // Open the modal
-                              setOpenMenuIndex(null);
-                            }}
-                          >
-                            Edit Character
-                          </button>
-                          <button
-                            className="dropdown-item"
-                            onClick={() => {
-                              setDeleteConfirmIndex(index);
-                              setOpenMenuIndex(null);
-                            }}
-                          >
-                            Delete Character
-                          </button>
+                    </div>
+                  )}
+                  <div className="initiative-input">
+                    <input
+                      type="number"
+                      className="initiative-textbox"
+                      placeholder="#"
+                      value={rowData[index].initiative ?? ''}
+                      onChange={(e) => handleInitiativeChange(index, e.target.value)}
+                    />
+                  </div>
+                  <div className="view-character-conditions">
+                    <button className="view-button" onClick={() => { updateViewCharacterIndex(shiftedIndex); }}>
+                      <img src={viewIcon} alt="View Icon" className="view-icon" />
+                    </button>
+                    <button
+                      className="editCharacterButton"
+                      onClick={() => {
+                        setEditCharacterIndex(index);
+                        setCharacterName(rowData[index].name);
+                        setAffiliation(rowData[index].affiliation);
+                        setIsModalOpen(index);
+                      }}
+                    >
+                      <img src={pencilIcon} alt="Edit" className="edit-icon" />
+                    </button>
+                    <button
+                      className="deleteCharacterButton"
+                      onClick={() => {
+                        setDeleteConfirmIndex(index);
+                      }}
+                    >
+                      <img src={trashcanIcon} alt="Delete" className="delete-icon" />
+                    </button>
+                  </div>
+                  {/* Remove the character-menu and dropdown */}
+                  <div className="name-input" style={{ color: getTextColor(rowData[index].affiliation) }}>
+                    {rowData[index].name || 'No Name'}
+                  </div>
+                  <div className="personal-conditions">
+                    {rowData[index].conditions.length > 0
+                      ? rowData[index].conditions.map((condition, i) => (
+                        <div
+                          key={condition + i}
+                          className="condition-section"
+                          style={{
+                            backgroundColor: getConditionBackgroundColor(condition),
+                            color: 'black',
+                          }}
+                        >
+                          {condition}
                         </div>
-                      )}
-                    </div>
-                    <div className="name-input" style={{ color: getTextColor(rowData[index].affiliation) }}>
-                      {rowData[index].name || 'No Name'}
-                    </div>
-                    <div className="personal-conditions">
-                      {rowData[index].conditions.length > 0
-                        ? rowData[index].conditions.map((condition, i) => (
-                            <div
-                              key={condition + i}
-                              className="condition-section"
-                              style={{
-                                backgroundColor: getConditionBackgroundColor(condition), // Set background color based on condition
-                                color: 'black', // Ensure text is always black
-                              }}
-                            >
-                              {condition}
-                            </div>
-                          ))
-                        : '[No Conditions]'}
-                    </div>
+                      ))
+                      : '[No Conditions]'}
+                  </div>
                 </div>
-                ))}
-          </div>
+              ))}
+            </div>
           </div>
           <div className="conditions-list">
             {/* Banner */}

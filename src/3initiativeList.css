@@ -160,12 +160,12 @@
   min-height: 10%;      /* Minimum height is 1/10th of the container */
   box-sizing: border-box;
   flex: 1 1 0;          /* Allow row to grow if content overflows */
-  align-items: center;;
+  align-items: center;
   /* Remove fixed height so it can grow */
   height: auto;
   border-top: 1px solid black; /* Add a border only at the top */
   transition: transform 0.5s ease, left 0.5s ease;
-  z-index: 1;
+  z-index: 2;
 }
  
   .add-new-character {
@@ -306,6 +306,7 @@
     justify-content: center;
     width: 10%; /* Adjust width as needed */
     background-color: transparent;
+    position: relative;
   }
   
   .character-menu-dots {
@@ -327,7 +328,7 @@
   border: 1px solid #ccc;
   border-radius: 6px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  z-index: 4000; /* Bring forward above modals and other content */
+  z-index: 1000; /* Bring forward above modals and other content */
   min-width: 140px;
   display: flex;
   flex-direction: column;

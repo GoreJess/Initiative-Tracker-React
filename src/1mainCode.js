@@ -7,7 +7,6 @@ import './5addConditionModal.css';
 import './6conditionsDisplay.css';
 import plusIcon from './media/plus-icon.png';
 import viewIcon from './media/view-icon.png';
-import threeDots from './media/three-dots.png';
 import './7deleteCharacterModal.css';
 import minusIcon from './media/minus-icon.png';
 import gearIcon from './media/gear-icon.png';
@@ -149,28 +148,50 @@ export default function MainCode() {
         );
       };
 
+      const [expirationTiming, setExpirationTiming] = useState("unknown");
+      const [expirationType, setExpirationType] = useState(""); // "round" or "character"
+      const [expirationTarget, setExpirationTarget] = useState(""); // round number or character name
+      const [expirationRound, setExpirationRound] = useState("");
+
       const handleAddConditionSubmit = (e) => {
-        e.preventDefault();
+  e.preventDefault();
 
-        const filteredSelectedConditions = selectedConditions.filter(cond => cond !== '(Custom)');
+  const filteredSelectedConditions = selectedConditions.filter(cond => cond !== '(Custom)');
 
-        const updatedRows = rowData.map(row => {
-          if (selectedCharacters.includes(row.name)) {
-            const newConditions = [
-              ...row.conditions,
-              ...filteredSelectedConditions.filter(cond => !row.conditions.includes(cond))
-            ];
-            return { ...row, conditions: newConditions };
-          }
-          return row;
-        });
+ // Build the expiration string
+let expirationString = "";
 
-        setRowData(updatedRows);
-        setIsAddConditionModalOpen(null);
-        setSelectedConditions([]);
-        setSelectedCharacters([]);
-        setIsCustomConditionModalOpen(false);
-      };
+if (expirationTiming === "unknown") {
+  expirationString = "Expires NA / Unknown";
+} else if (expirationType === "round") {
+  // e.g. "Expires just after Round 2"
+  expirationString = `Expires ${expirationTiming} Round ${expirationTarget}`;
+} else if (expirationType === "character") {
+  // e.g. "Expires just after Alice's turn on Round 2"
+  expirationString = `Expires ${expirationTiming} ${expirationTarget}'s turn on Round ${expirationRound}`;
+}
+
+      const updatedRows = rowData.map(row => {
+        if (selectedCharacters.includes(row.name)) {
+          // Add new condition objects with expiration
+          const newConditions = [
+            ...row.conditions,
+            ...filteredSelectedConditions
+              .filter(cond => !row.conditions.some(c => typeof c === "object" ? c.name === cond : c === cond))
+              .map(cond => ({ name: cond, expiration: expirationString }))
+          ];
+          return { ...row, conditions: newConditions };
+        }
+        return row;
+      });
+
+      setRowData(updatedRows);
+      setIsAddConditionModalOpen(null);
+      setSelectedConditions([]);
+      setSelectedCharacters([]);
+      setIsCustomConditionModalOpen(false);
+      // Optionally reset expiration dropdowns here
+    };
 
 
       const [isCustomConditionModalOpen, setIsCustomConditionModalOpen] = useState(false);
@@ -576,14 +597,16 @@ export default function MainCode() {
                     {rowData[index].conditions.length > 0
                       ? rowData[index].conditions.map((condition, i) => (
                         <div
-                          key={condition + i}
+                          key={(typeof condition === "object" ? condition.name : condition) + i}
                           className="condition-section"
                           style={{
-                            backgroundColor: getConditionBackgroundColor(condition),
+                            backgroundColor: getConditionBackgroundColor(
+                              typeof condition === "object" ? condition.name : condition
+                            ),
                             color: 'black',
                           }}
                         >
-                          {condition}
+                          {typeof condition === "object" ? condition.name : condition}
                         </div>
                       ))
                       : '[No Conditions]'}
@@ -608,8 +631,7 @@ export default function MainCode() {
             <div className="conditions-list-content"
               style={{ backgroundColor: viewCharacterIndex !== null ? 'var(--view-character-background)' : '' }}
             >
-              {
-                viewCharacterIndex !== null &&
+              {viewCharacterIndex !== null &&
                 sortedRowData[viewCharacterIndex] &&
                 rowData[sortedRowData[viewCharacterIndex].index] ? (
                   rowData[sortedRowData[viewCharacterIndex].index].conditions.map((condition, i) => (
@@ -633,10 +655,10 @@ export default function MainCode() {
                     </div>
                     <div className="condition-description">
                       <div>
-                        <strong>{condition}</strong>
+                        <strong>{typeof condition === "object" ? condition.name : condition}</strong>
                       </div>
                       <div>
-                        {(conditionDescriptions[condition] || "Filler description for this condition.")
+                        {(conditionDescriptions[typeof condition === "object" ? condition.name : condition] || "Filler description for this condition.")
                           .split('\n')
                           .map((line, idx) => (
                             <React.Fragment key={idx}>
@@ -646,63 +668,62 @@ export default function MainCode() {
                           ))}
                       </div>
                     </div>
-                    <div className="condition-expiration">Expires</div>
+                    <div className="condition-expiration">
+                      {typeof condition === "object" ? (condition.expiration || "NA / Unknown") : "NA / Unknown"}
+                    </div>
                   </div>
                 ))
                 ) : null
               }
               {shiftedRowIndex !== null &&
-              viewCharacterIndex === null &&
-              sortedRowData[shiftedRowIndex] &&
-              rowData[sortedRowData[shiftedRowIndex].index] &&
-              rowData[sortedRowData[shiftedRowIndex].index].conditions.length > 0 ? (
-                rowData[sortedRowData[shiftedRowIndex].index].conditions.map((condition, i) => (
-                  <div key={condition + i} className="conditions-row">
-                    <div className="remove-condition">
-                      <button
-                        className="remove-condition-button"
-                        onClick={() => {
-                          // Remove this condition from the shifted row
-                          const updatedData = [...rowData];
-                          const realIndex = sortedRowData[shiftedRowIndex].index;
-                          updatedData[realIndex].conditions = updatedData[realIndex].conditions.filter(
-                            (c) => c !== condition
-                          );
-                          setRowData(updatedData);
-                        }}
-                        aria-label={`Remove ${condition}`}
-                      >
-                        <img src={minusIcon} alt="Remove Condition" />
-                      </button>
-                    </div>
-                    <div className="condition-description">
-                      <div>
-                        <strong>{condition}</strong>
+                viewCharacterIndex === null &&
+                sortedRowData[shiftedRowIndex] &&
+                rowData[sortedRowData[shiftedRowIndex].index] &&
+                rowData[sortedRowData[shiftedRowIndex].index].conditions.length > 0 ? (
+                  rowData[sortedRowData[shiftedRowIndex].index].conditions.map((condition, i) => (
+                    <div key={condition + i} className="conditions-row">
+                      <div className="remove-condition">
+                        <button
+                          className="remove-condition-button"
+                          onClick={() => {
+                            // Remove this condition from the shifted row
+                            const updatedData = [...rowData];
+                            const realIndex = sortedRowData[shiftedRowIndex].index;
+                            updatedData[realIndex].conditions = updatedData[realIndex].conditions.filter(
+                              (c) =>
+                                typeof c === "object"
+                                  ? c.name !== (condition.name || condition)
+                                  : c !== (condition.name || condition)
+                            );
+                            setRowData(updatedData);
+                          }}
+                          aria-label={`Remove ${condition}`}
+                        >
+                          <img src={minusIcon} alt="Remove Condition" />
+                        </button>
                       </div>
-                      <div>
-                        {(conditionDescriptions[condition] || "Filler description for this condition.")
-                          .split('\n')
-                          .map((line, idx) => (
-                            <React.Fragment key={idx}>
-                              {line}
-                              <br />
-                            </React.Fragment>
-                          ))}
+                      <div className="condition-description">
+                        <div>
+                          <strong>{typeof condition === "object" ? condition.name : condition}</strong>
+                        </div>
+                        <div>
+                          {(conditionDescriptions[typeof condition === "object" ? condition.name : condition] || "Filler description for this condition.")
+                            .split('\n')
+                            .map((line, idx) => (
+                              <React.Fragment key={idx}>
+                                {line}
+                                <br />
+                              </React.Fragment>
+                            ))}
+                        </div>
+                      </div>
+                      <div className="condition-expiration">
+                        {typeof condition === "object" ? (condition.expiration || "NA / Unknown") : "NA / Unknown"}
                       </div>
                     </div>
-                    <div className="condition-expiration">Expires</div>
-                  </div>
-                ))
-              ) : null
-              // (
-              //   <div className="conditions-row">
-              //     <div className="remove-condition"></div>
-              //     <div className="condition-description" style={{ textAlign: 'center', width: '100%' }}>
-              //     </div>
-              //     <div className="condition-expiration"></div>
-              //   </div>
-              // )
-            }
+                  ))
+                ) : null
+              }
             </div>
             </div>
         </div>
@@ -872,24 +893,87 @@ export default function MainCode() {
             </div>
           </div>
           </div>
-          <div className="expiration-n-submit-button">
             <div className="condition-expiration-selection">
-              <label htmlFor="condition-expiration-dropdown" className="condition-expiration-label">
+              <label htmlFor="condition-expiration-timing" className="condition-expiration-label">
                 Condition Expiration:
               </label>
+              {/* First dropdown */}
               <select
-                id="condition-expiration-dropdown"
+                id="condition-expiration-timing"
                 className="condition-expiration-dropdown"
-                // value={selectedExpiration}
-                // onChange={e => setSelectedExpiration(e.target.value)}
+                value={expirationTiming}
+                onChange={e => {
+                  setExpirationTiming(e.target.value);
+                  setExpirationType("");
+                  setExpirationTarget("");
+                  setExpirationRound(""); // Reset fourth dropdown
+                }}
               >
-                <option value="unknown">NA / Unknown</option>
-                {[...Array(11)].map((_, i) => (
-                  <option key={i} value={`round-${round + i}`}>
-                    Round {round + i}
-                  </option>
-                ))}
+                <option>NA / Unknown</option>
+                <option>At the beginning of</option>
+                <option>Just before</option>
+                <option>Just after</option>
+                <option>At the end of</option>
               </select>
+              {/* Second dropdown */}
+              <select
+                className="condition-expiration-dropdown"
+                value={expirationType}
+                onChange={e => {
+                  setExpirationType(e.target.value);
+                  setExpirationTarget("");
+                  setExpirationRound(""); // Reset fourth dropdown
+                }}
+                disabled={expirationTiming === "unknown"}
+              >
+                {expirationTiming !== "unknown" && (
+                  <>
+                    <option value="">-- Select --</option>
+                    <option value="round">Round</option>
+                    <option value="character">Character's Turn:</option>
+                  </>
+                )}
+              </select>
+              {/* Third dropdown */}
+              <select
+                className="condition-expiration-dropdown"
+                value={expirationTarget}
+                onChange={e => setExpirationTarget(e.target.value)}
+                disabled={expirationTiming === "unknown" || !expirationType}
+              >
+                {expirationTiming !== "unknown" && expirationType === "round" &&
+                  [...Array(10)].map((_, i) => (
+                    <option key={i} value={round + i}>
+                      {round + i}
+                    </option>
+                  ))
+                }
+                {expirationTiming !== "unknown" && expirationType === "character" &&
+                  sortedRowData
+                    .filter(row => row.name && !overlayActive[row.index])
+                    .map(row => row.name)
+                    .sort((a, b) => a.localeCompare(b))
+                    .map(name => (
+                      <option key={name} value={name}>
+                        {name}
+                      </option>
+                    ))
+                }
+              </select>
+              {/* Fourth dropdown: only if "Character's Turn:" is selected */}
+              {expirationTiming !== "unknown" && expirationType === "character" && (
+                <select
+                  className="condition-expiration-dropdown"
+                  value={expirationRound}
+                  onChange={e => setExpirationRound(e.target.value)}
+                >
+                  {[...Array(10)].map((_, i) => (
+                    <option key={i} value={round + i}>
+                      On Round {round + i}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
             <div className="modal-button-group">
               <div className="submit-button-container">
@@ -903,7 +987,6 @@ export default function MainCode() {
                 X
               </button>
             </div>
-          </div>
         </form>
       </div>
 

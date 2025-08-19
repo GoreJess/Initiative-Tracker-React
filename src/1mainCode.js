@@ -15,461 +15,486 @@ import pencilIcon from './media/pencil-icon.png';
 import trashcanIcon from './media/trashcan-icon.png';
 
 export default function MainCode() {
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
-    const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [round, setRound] = useState(0); // Add state for the round number
+  const [errorMessage, setErrorMessage] = useState(''); // Add state for error message
+  const [isModalOpen, setIsModalOpen] = useState(null);
+  const [isAddConditionModalOpen, setIsAddConditionModalOpen] = useState(null); // Track the add-condition modal
+  const [characterName, setCharacterName] = useState('');
+  const [affiliation, setAffiliation] = useState('');
 
-    const handleNewCombat = () => {
-      let updatedData = [...rowData];
-      let updatedVisibility = [...rowVisibility];
-      let updatedOverlay = [...overlayActive];
+  const [rowVisibility, setRowVisibility] = useState(
+    Array(10).fill(false).map((_, index) => index === 0)
+  );
 
-      // Remove all Enemy, Ally, and Neutral/Environmental rows
-      for (let i = updatedData.length - 1; i >= 0; i--) {
-        const aff = updatedData[i].affiliation;
-        if (aff === 'Enemy' || aff === 'Ally' || aff === 'Neutral/Environmental') {
-          updatedData.splice(i, 1);
-          updatedVisibility.splice(i, 1);
-          updatedOverlay.splice(i, 1);
-        }
-      }
+  const [overlayActive, setOverlayActive] = useState(
+    Array(10).fill(false).map((_, index) => index === 0)
+  );
 
-      // Remove all conditions and clear initiative from remaining rows
-      updatedData = updatedData.map(row => ({
-        ...row,
-        conditions: [],
-        initiative: null // Clear initiative input
-      }));
+  const [rowData, setRowData] = useState(
+    Array(10).fill({ name: '', affiliation: '', initiative: null, conditions: [] })
+  );
 
-      // Fill up to 10 rows with empty slots if needed
-      while (updatedData.length < 10) {
-        updatedData.push({ name: '', affiliation: '', initiative: null, conditions: [] });
-        updatedVisibility.push(
-          updatedData.length === 1
-            ? true
-            : updatedData[updatedData.length - 2].name !== ''
-            ? true
-            : false
-        );
-        updatedOverlay.push(
-          updatedData.length === 1
-            ? true
-            : updatedData[updatedData.length - 2].name !== ''
-            ? true
-            : false
-        );
-      }
+  const [sortedRowData, setSortedRowData] = useState([]);
 
-      setRowData(updatedData);
-      setRowVisibility(updatedVisibility);
-      setOverlayActive(updatedOverlay);
-      setRound(0);
-      setShiftedRowIndex(null);
-      setViewCharacterIndex(null);
-      setIsSettingsModalOpen(false); // Close the modal
-    };
-
-    const handleFullReset = () => {
-      setRowData(
-        Array(10).fill({ name: '', affiliation: '', initiative: null, conditions: [] })
-      );
-      setRowVisibility(Array(10).fill(false).map((_, idx) => idx === 0));
-      setOverlayActive(Array(10).fill(false).map((_, idx) => idx === 0));
-      setRound(0);
-      setShiftedRowIndex(null);
-      setViewCharacterIndex(null);
-      setIsSettingsModalOpen(false); // Close the modal
-    };
-
-    const [round, setRound] = useState(0); // Add state for the round number
-    const [errorMessage, setErrorMessage] = useState(''); // Add state for error message
-    const [isModalOpen, setIsModalOpen] = useState(null);
-    const [isAddConditionModalOpen, setIsAddConditionModalOpen] = useState(null); // Track the add-condition modal
-    const [characterName, setCharacterName] = useState('');
-    const [affiliation, setAffiliation] = useState('');
-    const [rowVisibility, setRowVisibility] = useState(
-      Array(10).fill(false).map((_, index) => index === 0)
-    );
-    const [overlayActive, setOverlayActive] = useState(
-      Array(10).fill(false).map((_, index) => index === 0)
-    );
-    const [rowData, setRowData] = useState(
-        Array(10).fill({ name: '', affiliation: '', initiative: null, conditions: [] })
-      );
-
-    const [sortedRowData, setSortedRowData] = useState([]);
-
-    const [shiftedRowIndex, setShiftedRowIndex] = useState(null); // Track the index of the shifted row
-    
-    const [openMenuIndex, setOpenMenuIndex] = useState(null);
-
-    const [deleteConfirmIndex, setDeleteConfirmIndex] = useState(null);
-
-    const [editCharacterIndex, setEditCharacterIndex] = useState(null);
-
-    const [viewCharacterIndex, setViewCharacterIndex] = useState(null);
-
-    const handleAddConditionClick = (rowIndex) => {
-        setIsAddConditionModalOpen(rowIndex); // Open the modal for the specific row
-      };
-
-      const handleAddCondition = (rowIndex, conditions) => {
-        const updatedData = [...rowData];
-        conditions.forEach((condition) => {
-          if (!updatedData[rowIndex].conditions.includes(condition)) {
-            updatedData[rowIndex].conditions.push(condition); // Add the condition if it's not already present
-          }
-        });
-        setRowData(updatedData);
-        setIsAddConditionModalOpen(null); // Close the modal after adding the conditions
-      };
-    
-      const handleCloseAddConditionModal = () => {
-        setIsAddConditionModalOpen(null); // Close the add-condition modal
-        setSelectedConditions([]);        // Deselect all conditions
-        setSelectedCharacters([]);        // Deselect all characters
-        setIsCustomConditionModalOpen(false);
-      };
-
-      const [selectedConditions, setSelectedConditions] = useState([]);
-      const [selectedCharacters, setSelectedCharacters] = useState([]);
-
-      // Toggle selection for conditions
-      const handleConditionClick = (condition) => {
-        if (condition === '(Custom)') {
-        const isAlreadySelected = selectedConditions.includes(condition);
-        setIsCustomConditionModalOpen(!isAlreadySelected); // toggle modal open/close
-        setShowCustomConditionForm(false); // always reset the form view
-      }
-
-        setSelectedConditions((prev) =>
-          prev.includes(condition)
-            ? prev.filter((c) => c !== condition)
-            : [...prev, condition]
-        );
-      };
-
-      const [expirationTiming, setExpirationTiming] = useState("unknown");
-      const [expirationType, setExpirationType] = useState(""); // "round" or "character"
-      const [expirationTarget, setExpirationTarget] = useState(""); // round number or character name
-      const [expirationRound, setExpirationRound] = useState("");
-
-      const handleAddConditionSubmit = (e) => {
-  e.preventDefault();
-
-  const filteredSelectedConditions = selectedConditions.filter(cond => cond !== '(Custom)');
-
- // Build the expiration string
-let expirationString = "";
-
-if (expirationTiming === "unknown") {
-  expirationString = "Expires NA / Unknown";
-} else if (expirationType === "round") {
-  // e.g. "Expires just after Round 2"
-  expirationString = `Expires ${expirationTiming} Round ${expirationTarget}`;
-} else if (expirationType === "character") {
-  // e.g. "Expires just after Alice's turn on Round 2"
-  expirationString = `Expires ${expirationTiming} ${expirationTarget}'s turn on Round ${expirationRound}`;
-}
-
-      const updatedRows = rowData.map(row => {
-        if (selectedCharacters.includes(row.name)) {
-          // Add new condition objects with expiration
-          const newConditions = [
-            ...row.conditions,
-            ...filteredSelectedConditions
-              .filter(cond => !row.conditions.some(c => typeof c === "object" ? c.name === cond : c === cond))
-              .map(cond => ({ name: cond, expiration: expirationString }))
-          ];
-          return { ...row, conditions: newConditions };
-        }
-        return row;
-      });
-
-      setRowData(updatedRows);
-      setIsAddConditionModalOpen(null);
-      setSelectedConditions([]);
-      setSelectedCharacters([]);
-      setIsCustomConditionModalOpen(false);
-      // Optionally reset expiration dropdowns here
-    };
-
-
-      const [isCustomConditionModalOpen, setIsCustomConditionModalOpen] = useState(false);
-
-      const handleAddNewCustomCondition = () => {
-        alert("Add Custom Condition clicked!");
-        // Later, this could open a form, input, or prompt for condition name and description
-      };
-
-      const handleAddCustomCondition = () => {
-        if (customConditionName.trim() !== '') {
-          setCustomConditions([...customConditions, customConditionName.trim()]);
-          setCustomConditionName('');
-          setCustomConditionAffect('');
-          setCustomConditionDescription('');
-          setShowCustomConditionForm(false); // Hide form again
-        }
-      };
-
-
-      const [showCustomConditionForm, setShowCustomConditionForm] = useState(false);
-      const [customConditionName, setCustomConditionName] = useState('');
-      const [customConditionAffect, setCustomConditionAffect] = useState('');
-      const [customConditionDescription, setCustomConditionDescription] = useState('');
-      const [customConditions, setCustomConditions] = useState([]);
-
-
-      // Toggle selection for characters
-      const handleCharacterClick = (character) => {
-        setSelectedCharacters((prev) =>
-          prev.includes(character)
-            ? prev.filter((c) => c !== character)
-            : [...prev, character]
-        );
-      };
-
-      const conditionDescriptions = {
-        Blinded: "• Can’t See. You can’t see and automatically fail any ability check that requires sight. \n• Attacks Affected. Attack rolls against you have Advantage, and your attack rolls have Disadvantage.",
-        Charmed: "• Can’t Harm the Charmer. You can’t attack the charmer or target the charmer with damaging abilities or magical effects.\n• Social Advantage. The charmer has Advantage on any ability check to interact with you socially.",
-        Deafened: "• Can’t Hear. You can’t hear and automatically fail any ability check that requires hearing.",
-        Frightened: "• Ability Checks and Attacks Affected. You have Disadvantage on ability checks and attack rolls while the source of fear is within line of sight.\n• Can’t Approach. You can’t willingly move closer to the source of fear.",
-        Grappled: "• Speed 0. Your Speed is 0 and can’t increase.\n• Attacks Affected. You have Disadvantage on attack rolls against any target other than the grappler.\n• Movable. The grappler can drag or carry you when it moves, but every foot of movement costs it 1 extra foot unless you are Tiny or two or more sizes smaller than it.",
-        Incapacitated: "• Inactive. You can’t take any action, Bonus Action, or Reaction.\n• No Concentration. Your Concentration is broken.\n• Speechless. You can’t speak.\n• Surprised. If you’re Incapacitated when you roll Initiative, you have Disadvantage on the roll.",
-        Invisible: "• Surprise. If you’re Invisible when you roll Initiative, you have Advantage on the roll.\n• Concealed. You aren’t affected by any effect that requires its target to be seen unless the effect’s creator can somehow see you. Any equipment you are wearing or carrying is also concealed.\n• Attacks Affected. Attack rolls against you have Disadvantage, and your attack rolls have Advantage. If a creature can somehow see you, you don’t gain this benefit against that creature.",
-        Paralyzed: "• Incapacitated. You have the Incapacitated condition.\n• Speed 0. Your Speed is 0 and can’t increase.\n• Saving Throws Affected. You automatically fail Strength and Dexterity saving throws.\n• Attacks Affected. Attack rolls against you have Advantage.\n• Automatic Critical Hits. Any attack roll that hits you is a Critical Hit if the attacker is within 5 feet of you.",
-        Petrified: "• Turned to Inanimate Substance. You are transformed, along with any nonmagical objects you are wearing and carrying, into a solid inanimate substance (usually stone). Your weight increases by a factor of ten, and you cease aging.\n• Incapacitated. You have the Incapacitated condition.\n• Speed 0. Your Speed is 0 and can’t increase.\n• Attacks Affected. Attack rolls against you have Advantage.\n• Saving Throws Affected. You automatically fail Strength and Dexterity saving throws.\n• Resist Damage. You have Resistance to all damage.\n• Poison Immunity. You have Immunity to the Poisoned condition.",
-        Poisoned: "• Ability Checks and Attacks Affected. You have Disadvantage on attack rolls and ability checks.",
-        Prone: "• Restricted Movement. Your only movement options are to crawl or to spend an amount of movement equal to half your Speed (round down) to right yourself and thereby end the condition. If your Speed is 0, you can’t right yourself.\n• Attacks Affected. You have Disadvantage on attack rolls. An attack roll against you has Advantage if the attacker is within 5 feet of you. Otherwise, that attack roll has Disadvantage.",
-        Restrained: "• Speed 0. Your Speed is 0 and can’t increase.\n• Attacks Affected. Attack rolls against you have Advantage, and your attack rolls have Disadvantage.\n• Saving Throws Affected. You have Disadvantage on Dexterity saving throws.",
-        Stunned: "• Incapacitated. You have the Incapacitated condition.\n• Saving Throws Affected. You automatically fail Strength and Dexterity saving throws.\n• Attacks Affected. Attack rolls against you have Advantage.",
-        Unconscious: "• Inert. You have the Incapacitated and Prone conditions, and you drop whatever you’re holding. When this condition ends, you remain Prone.\n• Speed 0. Your Speed is 0 and can’t increase.\n• Attacks Affected. Attack rolls against you have Advantage.\n• Saving Throws Affected. You automatically fail Strength and Dexterity saving throws.\n• Automatic Critical Hits. Any attack roll that hits you is a Critical Hit if the attacker is within 5 feet of you.\n• Unaware. You’re unaware of your surroundings.",
-        Exhaustion1: "• D20 Tests Affected. When you make a D20 Test, the roll is reduced by 2.\n• Speed Reduced. Your Speed is reduced by 5 feet.\n• Removing Exhaustion Levels. Finishing a Long Rest removes 1 of your Exhaustion levels. When your Exhaustion level reaches 0, the condition ends.",
-        Exhaustion2: "• D20 Tests Affected. When you make a D20 Test, the roll is reduced by 4.\n• Speed Reduced. Your Speed is reduced by 10 feet.\n• Removing Exhaustion Levels. Finishing a Long Rest removes 1 of your Exhaustion levels. When your Exhaustion level reaches 0, the condition ends.",
-        Exhaustion3: "• D20 Tests Affected. When you make a D20 Test, the roll is reduced by 6.\n• Speed Reduced. Your Speed is reduced by 15 feet.\n• Removing Exhaustion Levels. Finishing a Long Rest removes 1 of your Exhaustion levels. When your Exhaustion level reaches 0, the condition ends.",
-        Exhaustion4: "• D20 Tests Affected. When you make a D20 Test, the roll is reduced by 8.\n• Speed Reduced. Your Speed is reduced by 20 feet.\n• Removing Exhaustion Levels. Finishing a Long Rest removes 1 of your Exhaustion levels. When your Exhaustion level reaches 0, the condition ends.",
-        Exhaustion5: "• D20 Tests Affected. When you make a D20 Test, the roll is reduced by 10.\n• Speed Reduced. Your Speed is reduced by 25 feet.\n• Removing Exhaustion Levels. Finishing a Long Rest removes 1 of your Exhaustion levels. When your Exhaustion level reaches 0, the condition ends.",
-        Exhaustion6: "• You are Dead.\n• If you are revived after dying this way, you return to life with Exhaustion5.",
-        "(Custom)": "Filler description for custom condition.",
-      };  
-
-    const handleNextRound = () => {
-        setRound((prevRound) => {
-          const sortedRows = [...sortedRowData]
-            .filter((_, index) => !overlayActive[index]) // Only consider visible rows without overlays
-      
-          const currentRowIndex = shiftedRowIndex ?? -1; // Start with no row shifted
-          let nextRowIndex = null;
-      
-          // Find the next row to shift
-          if (currentRowIndex === -1 || currentRowIndex === sortedRows.length - 1) {
-            // If no row is shifted or the last row is shifted, start from the first row
-            nextRowIndex = 0;
-          } else {
-            // Otherwise, find the next row in the sorted order
-            // const currentIndexInSorted = sortedRows.findIndex((row) => row.index === currentRowIndex);
-            nextRowIndex = currentRowIndex + 1;
-          }
-
-          setViewCharacterIndex(null);
-      
-          // Update the shifted row
-          setShiftedRowIndex(nextRowIndex);
-      
-          // Increment the round counter only if we loop back to the first row
-          return nextRowIndex === 0 ? prevRound + 1 : prevRound;
-        });
-      };
+  const [shiftedRowIndex, setShiftedRowIndex] = useState(null); // Track the index of the shifted row
   
-      const handlePreviousRound = () => {
-        setRound((prevRound) => {
-          const sortedRows = [...sortedRowData]
-            .filter((_, index) => !overlayActive[index]) // Only consider visible rows without overlays
-      
-          const currentRowIndex = shiftedRowIndex ?? -1; // Start with no row shifted
-          let previousRowIndex = null;
-      
-          // Find the previous row to shift
-          if (currentRowIndex === -1 || currentRowIndex === 0) {
-            // If no row is shifted or the first row is shifted, move to the last row
-            previousRowIndex = sortedRows.length - 1;
-          } else {
-            // Otherwise, find the previous row in the sorted order
-            previousRowIndex = currentRowIndex - 1;
-          }
+  const [openMenuIndex, setOpenMenuIndex] = useState(null);
 
-          setViewCharacterIndex(null);
-      
-          // Update the shifted row
-          setShiftedRowIndex(previousRowIndex);
-      
-          // Decrement the round counter only if we loop back to the last row
-          return previousRowIndex === sortedRows.length - 1 ? Math.max(prevRound - 1, 0) : prevRound;
-        });
-      };
-  
-    const handleOpenModal = (rowIndex) => {
-      setIsModalOpen(rowIndex);
-    };
-  
-    const handleCloseModal = () => {
-      setIsModalOpen(null);
-      setCharacterName('');
-      setAffiliation('');
-      setEditCharacterIndex(null);
-    };
-  
-    const handleSubmit = (event) => {
-      event.preventDefault();
+  const [deleteConfirmIndex, setDeleteConfirmIndex] = useState(null);
 
-      // Validate form inputs
-      if (!characterName.trim() || !affiliation) {
-        setErrorMessage('Please fill out all fields before submitting.');
-        return;
-      }
+  const [editCharacterIndex, setEditCharacterIndex] = useState(null);
 
-      const updatedData = [...rowData];
+  const [viewCharacterIndex, setViewCharacterIndex] = useState(null);
 
-      if (editCharacterIndex !== null) {
-        // Edit existing character
-        updatedData[editCharacterIndex] = {
-          ...updatedData[editCharacterIndex],
-          name: characterName,
-          affiliation: affiliation,
-        };
-        setRowData(updatedData);
-        setEditCharacterIndex(null);
-      } else {
-        // Add new character logic
-        updatedData[isModalOpen] = {
-          ...updatedData[isModalOpen],
-          name: characterName,
-          affiliation: affiliation,
-        };
-        setRowData(updatedData);
+  const [expirationTiming, setExpirationTiming] = useState("unknown");
+  const [expirationType, setExpirationType] = useState(""); // "round" or "character"
+  const [expirationTarget, setExpirationTarget] = useState(""); // round number or character name
+  const [expirationRound, setExpirationRound] = useState("");
 
-        const updatedOverlay = [...overlayActive];
-        updatedOverlay[isModalOpen] = false;
-        if (isModalOpen + 1 < updatedOverlay.length) {
-          updatedOverlay[isModalOpen + 1] = true;
-        }
-        setOverlayActive(updatedOverlay);
+  const [isCustomConditionModalOpen, setIsCustomConditionModalOpen] = useState(false);
 
-        const updatedVisibility = [...rowVisibility];
-        if (isModalOpen + 1 < updatedVisibility.length) {
-          updatedVisibility[isModalOpen + 1] = true;
-        }
-        setRowVisibility(updatedVisibility);
-      }
+  const [selectedConditions, setSelectedConditions] = useState([]);
+  const [selectedCharacters, setSelectedCharacters] = useState([]);
 
-      // Reset modal state
-      setIsModalOpen(null);
-      setCharacterName('');
-      setAffiliation('');
-      setErrorMessage('');
-    };
-  
-    const handleInitiativeChange = (index, value) => {
-      const updatedData = [...rowData];
-      updatedData[index].initiative = value ? parseFloat(value) : null; // Save initiative value
-      setRowData(updatedData);
-    };
+  const [showCustomConditionForm, setShowCustomConditionForm] = useState(false);
+  const [customConditionName, setCustomConditionName] = useState('');
+  const [customConditionAffect, setCustomConditionAffect] = useState('');
+  const [customConditionDescription, setCustomConditionDescription] = useState('');
+  const [customConditions, setCustomConditions] = useState([]);
 
-    const updateViewCharacterIndex = (index) => {
-      if (viewCharacterIndex === index) {
-        setViewCharacterIndex(null);
-      } else {
-        setViewCharacterIndex(index);
+  const [toggleAddConditionEnforcementMessage, setToggleAddConditionEnforcementMessage] = useState(false);
+
+  // const handleAddCondition = (rowIndex, conditions) => {
+  //   const updatedData = [...rowData];
+  //   conditions.forEach((condition) => {
+  //     if (!updatedData[rowIndex].conditions.includes(condition)) {
+  //       updatedData[rowIndex].conditions.push(condition); // Add the condition if it's not already present
+  //     }
+  //   });
+  //   setRowData(updatedData);
+  //   setIsAddConditionModalOpen(null); // Close the modal after adding the conditions
+  // };
+
+  const handleNewCombat = () => {
+    let updatedData = [...rowData];
+    let updatedVisibility = [...rowVisibility];
+    let updatedOverlay = [...overlayActive];
+
+    // Remove all Enemy, Ally, and Neutral/Environmental rows
+    for (let i = updatedData.length - 1; i >= 0; i--) {
+      const aff = updatedData[i].affiliation;
+      if (aff === 'Enemy' || aff === 'Ally' || aff === 'Neutral/Environmental') {
+        updatedData.splice(i, 1);
+        updatedVisibility.splice(i, 1);
+        updatedOverlay.splice(i, 1);
       }
     }
 
-    const getConditionBackgroundColor = (condition) => {
-      const conditionColors = {
-        Blinded: 'var(--bad-condition-background)',
-        Charmed: 'var(--bad-condition-background)',
-        Deafened: 'var(--bad-condition-background)',
-        Frightened: 'var(--bad-condition-background)',
-        Grappled: 'var(--bad-condition-background)',
-        Incapacitated: 'var(--bad-condition-background)',
-        Invisible: 'var(--good-condition-background)',
-        Paralyzed: 'var(--bad-condition-background)',
-        Petrified: 'var(--bad-condition-background)',
-        Poisoned: 'var(--bad-condition-background)',
-        Prone: 'var(--neutral-condition-background)',
-        Restrained: 'var(--bad-condition-background)',
-        Stunned: 'var(--bad-condition-background)',
-        Unconscious: 'var(--bad-condition-background)',
-        'Exhaustion1': 'var(--bad-condition-background)',
-        'Exhaustion2': 'var(--bad-condition-background)',
-        'Exhaustion3': 'var(--bad-condition-background)',
-        'Exhaustion4': 'var(--bad-condition-background)',
-        'Exhaustion5': 'var(--bad-condition-background)',
-        'Exhaustion6': 'var(--bad-condition-background)',
-        Other1: 'var(--neutral-condition-background)',
-        Other2: 'var(--neutral-condition-background)',
-        Other3: 'var(--neutral-condition-background)',
-        Other4: 'var(--neutral-condition-background)',
-        '(Custom)': 'var(--neutral-condition-background)',
-      };
+    // Remove all conditions and clear initiative from remaining rows
+    updatedData = updatedData.map(row => ({
+      ...row,
+      conditions: [],
+      initiative: null // Clear initiative input
+    }));
+
+    // Fill up to 10 rows with empty slots if needed
+    while (updatedData.length < 10) {
+      updatedData.push({ name: '', affiliation: '', initiative: null, conditions: [] });
+      updatedVisibility.push(
+        updatedData.length === 1
+          ? true
+          : updatedData[updatedData.length - 2].name !== ''
+          ? true
+          : false
+      );
+      updatedOverlay.push(
+        updatedData.length === 1
+          ? true
+          : updatedData[updatedData.length - 2].name !== ''
+          ? true
+          : false
+      );
+    }
+
+    setRowData(updatedData);
+    setRowVisibility(updatedVisibility);
+    setOverlayActive(updatedOverlay);
+    setRound(0);
+    setShiftedRowIndex(null);
+    setViewCharacterIndex(null);
+    setIsSettingsModalOpen(false); // Close the modal
+  };
+
+  const handleAddConditionClick = (rowIndex) => {
+    setIsAddConditionModalOpen(rowIndex); // Open the modal for the specific row
+  };
+
+  const handleFullReset = () => {
+    setRowData(
+      Array(10).fill({ name: '', affiliation: '', initiative: null, conditions: [] })
+    );
+    setRowVisibility(Array(10).fill(false).map((_, idx) => idx === 0));
+    setOverlayActive(Array(10).fill(false).map((_, idx) => idx === 0));
+    setRound(0);
+    setShiftedRowIndex(null);
+    setViewCharacterIndex(null);
+    setIsSettingsModalOpen(false); // Close the modal
+  };
     
-      return conditionColors[condition] || 'var(--neutral-condition-background)'; // Default to neutral condition background
-    };
-  
-    const getTextColor = (affiliation) => {
-      switch (affiliation) {
-        case 'Player Character':
-          return 'darkblue';
-        case 'Enemy':
-          return 'red';
-        case 'Ally':
-          return 'purple';
-        case 'Neutral/Environmental':
-          return '#363636';
-        default:
-          return 'black';
+  const handleCloseAddConditionModal = () => {
+    setIsAddConditionModalOpen(null); // Close the add-condition modal
+    setSelectedConditions([]);        // Deselect all conditions
+    setSelectedCharacters([]);        // Deselect all characters
+    setIsCustomConditionModalOpen(false);
+    setToggleAddConditionEnforcementMessage(false);
+  };
+
+
+  // Toggle selection for conditions
+  const handleConditionClick = (condition) => {
+    if (condition === '(Custom)') {
+    const isAlreadySelected = selectedConditions.includes(condition);
+    setIsCustomConditionModalOpen(!isAlreadySelected); // toggle modal open/close
+    setShowCustomConditionForm(false); // always reset the form view
+  }
+
+    setSelectedConditions((prev) =>
+      prev.includes(condition)
+        ? prev.filter((c) => c !== condition)
+        : [...prev, condition]
+    );
+  };
+
+  const handleAddConditionSubmit = (e) => {
+    e.preventDefault();
+
+    const filteredSelectedConditions = selectedConditions.filter(cond => cond !== '(Custom)');
+
+    // Enforce non-empty dropdowns and selections
+    if (expirationType === "round") {
+      if (expirationTiming === "uknown" || !expirationTarget ) {
+        setToggleAddConditionEnforcementMessage(true);
+        return;
       }
-    };
+    } else if (expirationType === "character") {
+      if (expirationTiming === "unknown" || !expirationTarget || !expirationRound) {
+        setToggleAddConditionEnforcementMessage(true);
+        return;
+      }
+    } else {
+      setToggleAddConditionEnforcementMessage(true);
+      return;
+    }
 
-    const dropdownRef = useRef(null);
+    if (filteredSelectedConditions.length < 1 || selectedCharacters.length < 1) {
+      setToggleAddConditionEnforcementMessage(true);
+      return;
+    }
 
-      useEffect(() => {
-        if (openMenuIndex !== null) {
-          const handleClickOutside = (event) => {
-            if (
-              dropdownRef.current &&
-              !dropdownRef.current.contains(event.target)
-            ) {
-              setOpenMenuIndex(null);
-            }
-          };
-          document.addEventListener('mousedown', handleClickOutside);
-          return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-          };
+    // Build the expiration string
+    let expirationString = "";
+
+    if (expirationTiming === "unknown") {
+      expirationString = "Expires NA / Unknown";
+    } else if (expirationType === "round") {
+      // e.g. "Expires just after Round 2"
+      expirationString = `Expires ${expirationTiming} Round ${expirationTarget}`;
+    } else if (expirationType === "character") {
+      // e.g. "Expires just after Alice's turn on Round 2"
+      expirationString = `Expires ${expirationTiming} ${expirationTarget}'s turn on Round ${expirationRound}`;
+    }
+
+    const updatedRows = rowData.map(row => {
+      if (selectedCharacters.includes(row.name)) {
+        // Add new condition objects with expiration
+        const newConditions = [
+          ...row.conditions,
+          ...filteredSelectedConditions
+            .filter(cond => !row.conditions.some(c => typeof c === "object" ? c.name === cond : c === cond))
+            .map(cond => ({ name: cond, expiration: expirationString }))
+        ];
+        return { ...row, conditions: newConditions };
+      }
+      return row;
+    });
+
+    setRowData(updatedRows);
+    setIsAddConditionModalOpen(null);
+    setSelectedConditions([]);
+    setSelectedCharacters([]);
+    setIsCustomConditionModalOpen(false);
+    setToggleAddConditionEnforcementMessage(false);
+    // Optionally reset expiration dropdowns here
+  };
+
+  // const handleAddNewCustomCondition = () => {
+  //   alert("Add Custom Condition clicked!");
+  //   // Later, this could open a form, input, or prompt for condition name and description
+  // };
+
+  // const handleAddCustomCondition = () => {
+  //   if (customConditionName.trim() !== '') {
+  //     setCustomConditions([...customConditions, customConditionName.trim()]);
+  //     setCustomConditionName('');
+  //     setCustomConditionAffect('');
+  //     setCustomConditionDescription('');
+  //     setShowCustomConditionForm(false); // Hide form again
+  //   }
+  // };
+
+  // Toggle selection for characters
+  const handleCharacterClick = (character) => {
+    setSelectedCharacters((prev) =>
+      prev.includes(character)
+        ? prev.filter((c) => c !== character)
+        : [...prev, character]
+    );
+  };
+
+  const conditionDescriptions = {
+    Blinded: "• Can’t See. You can’t see and automatically fail any ability check that requires sight. \n• Attacks Affected. Attack rolls against you have Advantage, and your attack rolls have Disadvantage.",
+    Charmed: "• Can’t Harm the Charmer. You can’t attack the charmer or target the charmer with damaging abilities or magical effects.\n• Social Advantage. The charmer has Advantage on any ability check to interact with you socially.",
+    Deafened: "• Can’t Hear. You can’t hear and automatically fail any ability check that requires hearing.",
+    Frightened: "• Ability Checks and Attacks Affected. You have Disadvantage on ability checks and attack rolls while the source of fear is within line of sight.\n• Can’t Approach. You can’t willingly move closer to the source of fear.",
+    Grappled: "• Speed 0. Your Speed is 0 and can’t increase.\n• Attacks Affected. You have Disadvantage on attack rolls against any target other than the grappler.\n• Movable. The grappler can drag or carry you when it moves, but every foot of movement costs it 1 extra foot unless you are Tiny or two or more sizes smaller than it.",
+    Incapacitated: "• Inactive. You can’t take any action, Bonus Action, or Reaction.\n• No Concentration. Your Concentration is broken.\n• Speechless. You can’t speak.\n• Surprised. If you’re Incapacitated when you roll Initiative, you have Disadvantage on the roll.",
+    Invisible: "• Surprise. If you’re Invisible when you roll Initiative, you have Advantage on the roll.\n• Concealed. You aren’t affected by any effect that requires its target to be seen unless the effect’s creator can somehow see you. Any equipment you are wearing or carrying is also concealed.\n• Attacks Affected. Attack rolls against you have Disadvantage, and your attack rolls have Advantage. If a creature can somehow see you, you don’t gain this benefit against that creature.",
+    Paralyzed: "• Incapacitated. You have the Incapacitated condition.\n• Speed 0. Your Speed is 0 and can’t increase.\n• Saving Throws Affected. You automatically fail Strength and Dexterity saving throws.\n• Attacks Affected. Attack rolls against you have Advantage.\n• Automatic Critical Hits. Any attack roll that hits you is a Critical Hit if the attacker is within 5 feet of you.",
+    Petrified: "• Turned to Inanimate Substance. You are transformed, along with any nonmagical objects you are wearing and carrying, into a solid inanimate substance (usually stone). Your weight increases by a factor of ten, and you cease aging.\n• Incapacitated. You have the Incapacitated condition.\n• Speed 0. Your Speed is 0 and can’t increase.\n• Attacks Affected. Attack rolls against you have Advantage.\n• Saving Throws Affected. You automatically fail Strength and Dexterity saving throws.\n• Resist Damage. You have Resistance to all damage.\n• Poison Immunity. You have Immunity to the Poisoned condition.",
+    Poisoned: "• Ability Checks and Attacks Affected. You have Disadvantage on attack rolls and ability checks.",
+    Prone: "• Restricted Movement. Your only movement options are to crawl or to spend an amount of movement equal to half your Speed (round down) to right yourself and thereby end the condition. If your Speed is 0, you can’t right yourself.\n• Attacks Affected. You have Disadvantage on attack rolls. An attack roll against you has Advantage if the attacker is within 5 feet of you. Otherwise, that attack roll has Disadvantage.",
+    Restrained: "• Speed 0. Your Speed is 0 and can’t increase.\n• Attacks Affected. Attack rolls against you have Advantage, and your attack rolls have Disadvantage.\n• Saving Throws Affected. You have Disadvantage on Dexterity saving throws.",
+    Stunned: "• Incapacitated. You have the Incapacitated condition.\n• Saving Throws Affected. You automatically fail Strength and Dexterity saving throws.\n• Attacks Affected. Attack rolls against you have Advantage.",
+    Unconscious: "• Inert. You have the Incapacitated and Prone conditions, and you drop whatever you’re holding. When this condition ends, you remain Prone.\n• Speed 0. Your Speed is 0 and can’t increase.\n• Attacks Affected. Attack rolls against you have Advantage.\n• Saving Throws Affected. You automatically fail Strength and Dexterity saving throws.\n• Automatic Critical Hits. Any attack roll that hits you is a Critical Hit if the attacker is within 5 feet of you.\n• Unaware. You’re unaware of your surroundings.",
+    Exhaustion1: "• D20 Tests Affected. When you make a D20 Test, the roll is reduced by 2.\n• Speed Reduced. Your Speed is reduced by 5 feet.\n• Removing Exhaustion Levels. Finishing a Long Rest removes 1 of your Exhaustion levels. When your Exhaustion level reaches 0, the condition ends.",
+    Exhaustion2: "• D20 Tests Affected. When you make a D20 Test, the roll is reduced by 4.\n• Speed Reduced. Your Speed is reduced by 10 feet.\n• Removing Exhaustion Levels. Finishing a Long Rest removes 1 of your Exhaustion levels. When your Exhaustion level reaches 0, the condition ends.",
+    Exhaustion3: "• D20 Tests Affected. When you make a D20 Test, the roll is reduced by 6.\n• Speed Reduced. Your Speed is reduced by 15 feet.\n• Removing Exhaustion Levels. Finishing a Long Rest removes 1 of your Exhaustion levels. When your Exhaustion level reaches 0, the condition ends.",
+    Exhaustion4: "• D20 Tests Affected. When you make a D20 Test, the roll is reduced by 8.\n• Speed Reduced. Your Speed is reduced by 20 feet.\n• Removing Exhaustion Levels. Finishing a Long Rest removes 1 of your Exhaustion levels. When your Exhaustion level reaches 0, the condition ends.",
+    Exhaustion5: "• D20 Tests Affected. When you make a D20 Test, the roll is reduced by 10.\n• Speed Reduced. Your Speed is reduced by 25 feet.\n• Removing Exhaustion Levels. Finishing a Long Rest removes 1 of your Exhaustion levels. When your Exhaustion level reaches 0, the condition ends.",
+    Exhaustion6: "• You are Dead.\n• If you are revived after dying this way, you return to life with Exhaustion5.",
+    "(Custom)": "Filler description for custom condition.",
+  };  
+
+  const handleNextRound = () => {
+      setRound((prevRound) => {
+        const sortedRows = [...sortedRowData]
+          .filter((_, index) => !overlayActive[index]) // Only consider visible rows without overlays
+    
+        const currentRowIndex = shiftedRowIndex ?? -1; // Start with no row shifted
+        let nextRowIndex = null;
+    
+        // Find the next row to shift
+        if (currentRowIndex === -1 || currentRowIndex === sortedRows.length - 1) {
+          // If no row is shifted or the last row is shifted, start from the first row
+          nextRowIndex = 0;
+        } else {
+          // Otherwise, find the next row in the sorted order
+          // const currentIndexInSorted = sortedRows.findIndex((row) => row.index === currentRowIndex);
+          nextRowIndex = currentRowIndex + 1;
         }
-      }, [openMenuIndex]);
 
-    useEffect(() => {
-      const visibleRows = rowData
-        .map((data, index) => ({ ...data, index }))
-        .filter((_, i) => rowVisibility[i]);
+        setViewCharacterIndex(null);
+    
+        // Update the shifted row
+        setShiftedRowIndex(nextRowIndex);
+    
+        // Increment the round counter only if we loop back to the first row
+        return nextRowIndex === 0 ? prevRound + 1 : prevRound;
+      });
+    };
   
-      const normalRows = visibleRows
-        .filter((row) => !overlayActive[row.index])
-        .sort((a, b) => {
-          if (b.initiative !== a.initiative) {
-            return (b.initiative ?? -Infinity) - (a.initiative ?? -Infinity);
-          }
-          return (a.name || '').localeCompare(b.name || '');
-        });
-    
-      const overlayRows = visibleRows.filter((row) => overlayActive[row.index]);
-    
-      const sortedRows = [...normalRows, ...overlayRows];
+  const handlePreviousRound = () => {
+    setRound((prevRound) => {
+      const sortedRows = [...sortedRowData]
+        .filter((_, index) => !overlayActive[index]) // Only consider visible rows without overlays
+  
+      const currentRowIndex = shiftedRowIndex ?? -1; // Start with no row shifted
+      let previousRowIndex = null;
+  
+      // Find the previous row to shift
+      if (currentRowIndex === -1 || currentRowIndex === 0) {
+        // If no row is shifted or the first row is shifted, move to the last row
+        previousRowIndex = sortedRows.length - 1;
+      } else {
+        // Otherwise, find the previous row in the sorted order
+        previousRowIndex = currentRowIndex - 1;
+      }
 
-      setSortedRowData(sortedRows);
-    }, [rowData])
+      setViewCharacterIndex(null);
   
-    return (
+      // Update the shifted row
+      setShiftedRowIndex(previousRowIndex);
+  
+      // Decrement the round counter only if we loop back to the last row
+      return previousRowIndex === sortedRows.length - 1 ? Math.max(prevRound - 1, 0) : prevRound;
+    });
+  };
+  
+  const handleOpenModal = (rowIndex) => {
+    setIsModalOpen(rowIndex);
+  };
+  
+  const handleCloseModal = () => {
+    setIsModalOpen(null);
+    setCharacterName('');
+    setAffiliation('');
+    setEditCharacterIndex(null);
+  };
+  
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    // Validate form inputs
+    if (!characterName.trim() || !affiliation) {
+      setErrorMessage('Please fill out all fields before submitting.');
+      return;
+    }
+
+    const updatedData = [...rowData];
+
+    if (editCharacterIndex !== null) {
+      // Edit existing character
+      updatedData[editCharacterIndex] = {
+        ...updatedData[editCharacterIndex],
+        name: characterName,
+        affiliation: affiliation,
+      };
+      setRowData(updatedData);
+      setEditCharacterIndex(null);
+    } else {
+      // Add new character logic
+      updatedData[isModalOpen] = {
+        ...updatedData[isModalOpen],
+        name: characterName,
+        affiliation: affiliation,
+      };
+      setRowData(updatedData);
+
+      const updatedOverlay = [...overlayActive];
+      updatedOverlay[isModalOpen] = false;
+      if (isModalOpen + 1 < updatedOverlay.length) {
+        updatedOverlay[isModalOpen + 1] = true;
+      }
+      setOverlayActive(updatedOverlay);
+
+      const updatedVisibility = [...rowVisibility];
+      if (isModalOpen + 1 < updatedVisibility.length) {
+        updatedVisibility[isModalOpen + 1] = true;
+      }
+      setRowVisibility(updatedVisibility);
+    }
+
+    // Reset modal state
+    setIsModalOpen(null);
+    setCharacterName('');
+    setAffiliation('');
+    setErrorMessage('');
+  };
+  
+  const handleInitiativeChange = (index, value) => {
+    const updatedData = [...rowData];
+    updatedData[index].initiative = value ? parseFloat(value) : null; // Save initiative value
+    setRowData(updatedData);
+  };
+
+  const updateViewCharacterIndex = (index) => {
+    if (viewCharacterIndex === index) {
+      setViewCharacterIndex(null);
+    } else {
+      setViewCharacterIndex(index);
+    }
+  }
+
+  const getConditionBackgroundColor = (condition) => {
+    const conditionColors = {
+      Blinded: 'var(--bad-condition-background)',
+      Charmed: 'var(--bad-condition-background)',
+      Deafened: 'var(--bad-condition-background)',
+      Frightened: 'var(--bad-condition-background)',
+      Grappled: 'var(--bad-condition-background)',
+      Incapacitated: 'var(--bad-condition-background)',
+      Invisible: 'var(--good-condition-background)',
+      Paralyzed: 'var(--bad-condition-background)',
+      Petrified: 'var(--bad-condition-background)',
+      Poisoned: 'var(--bad-condition-background)',
+      Prone: 'var(--neutral-condition-background)',
+      Restrained: 'var(--bad-condition-background)',
+      Stunned: 'var(--bad-condition-background)',
+      Unconscious: 'var(--bad-condition-background)',
+      'Exhaustion1': 'var(--bad-condition-background)',
+      'Exhaustion2': 'var(--bad-condition-background)',
+      'Exhaustion3': 'var(--bad-condition-background)',
+      'Exhaustion4': 'var(--bad-condition-background)',
+      'Exhaustion5': 'var(--bad-condition-background)',
+      'Exhaustion6': 'var(--bad-condition-background)',
+      Other1: 'var(--neutral-condition-background)',
+      Other2: 'var(--neutral-condition-background)',
+      Other3: 'var(--neutral-condition-background)',
+      Other4: 'var(--neutral-condition-background)',
+      '(Custom)': 'var(--neutral-condition-background)',
+    };
+  
+    return conditionColors[condition] || 'var(--neutral-condition-background)'; // Default to neutral condition background
+  };
+  
+  const getTextColor = (affiliation) => {
+    switch (affiliation) {
+      case 'Player Character':
+        return 'darkblue';
+      case 'Enemy':
+        return 'red';
+      case 'Ally':
+        return 'purple';
+      case 'Neutral/Environmental':
+        return '#363636';
+      default:
+        return 'black';
+    }
+  };
+
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    if (openMenuIndex !== null) {
+      const handleClickOutside = (event) => {
+        if (
+          dropdownRef.current &&
+          !dropdownRef.current.contains(event.target)
+        ) {
+          setOpenMenuIndex(null);
+        }
+      };
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [openMenuIndex]);
+
+  useEffect(() => {
+    const visibleRows = rowData
+      .map((data, index) => ({ ...data, index }))
+      .filter((_, i) => rowVisibility[i]);
+
+    const normalRows = visibleRows
+      .filter((row) => !overlayActive[row.index])
+      .sort((a, b) => {
+        if (b.initiative !== a.initiative) {
+          return (b.initiative ?? -Infinity) - (a.initiative ?? -Infinity);
+        }
+        return (a.name || '').localeCompare(b.name || '');
+      });
+  
+    const overlayRows = visibleRows.filter((row) => overlayActive[row.index]);
+  
+    const sortedRows = [...normalRows, ...overlayRows];
+
+    setSortedRowData(sortedRows);
+  }, [rowData])
+  
+  return (
    <>
     {isSettingsModalOpen && (
       <div className="modal-overlay settings-modal">
@@ -942,22 +967,34 @@ if (expirationTiming === "unknown") {
                 disabled={expirationTiming === "unknown" || !expirationType}
               >
                 {expirationTiming !== "unknown" && expirationType === "round" &&
-                  [...Array(10)].map((_, i) => (
-                    <option key={i} value={round + i}>
-                      {round + i}
-                    </option>
-                  ))
+                  <>
+                    (
+                      <option value="">--Select Round--</option>
+                    )
+                    {
+                      [...Array(10)].map((_, i) => (
+                        <option key={i} value={round + i}>
+                          {round + i}
+                        </option>
+                      ))
+                    }
+                  </>
                 }
                 {expirationTiming !== "unknown" && expirationType === "character" &&
-                  sortedRowData
-                    .filter(row => row.name && !overlayActive[row.index])
-                    .map(row => row.name)
-                    .sort((a, b) => a.localeCompare(b))
-                    .map(name => (
-                      <option key={name} value={name}>
-                        {name}
-                      </option>
-                    ))
+                  <>
+                    <option value="">--Select Character--</option>
+                    {
+                      sortedRowData
+                        .filter(row => row.name && !overlayActive[row.index])
+                        .map(row => row.name)
+                        .sort((a, b) => a.localeCompare(b))
+                        .map(name => (
+                          <option key={name} value={name}>
+                            {name}
+                          </option>
+                        ))
+                    }
+                  </>
                 }
               </select>
               {/* Fourth dropdown: only if "Character's Turn:" is selected */}
@@ -967,6 +1004,7 @@ if (expirationTiming === "unknown") {
                   value={expirationRound}
                   onChange={e => setExpirationRound(e.target.value)}
                 >
+                  <option value="">--Select Round--</option>
                   {[...Array(10)].map((_, i) => (
                     <option key={i} value={round + i}>
                       On Round {round + i}
@@ -974,6 +1012,13 @@ if (expirationTiming === "unknown") {
                   ))}
                 </select>
               )}
+            </div>
+            <div>
+              {
+                toggleAddConditionEnforcementMessage && (
+                  <h3 style={{color: "red"}}>Please ensure all fields are not empty</h3>
+                )
+              }
             </div>
             <div className="modal-button-group">
               <div className="submit-button-container">

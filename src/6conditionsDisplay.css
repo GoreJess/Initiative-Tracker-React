@@ -157,7 +157,7 @@
 }
   
   .condition-expiration {
-    background-color: yellow;
+    background-color: var(--conditions-expiration-background);
     color: black;
     width: 10%;
     display: flex;

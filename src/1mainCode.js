@@ -1037,7 +1037,7 @@ export default function MainCode() {
 
       {isCustomConditionModalOpen && (
         <div className="custom-condition-modal">
-          <h3>Custom Condition</h3>
+          <h2>Custom Condition</h2>
             {!showCustomConditionForm ? (
                 <button onClick={() => setShowCustomConditionForm(true)} className="new-custom-condition-button">
                   New Custom Condition
@@ -1070,6 +1070,7 @@ export default function MainCode() {
                 <div className="form-group">
                   <label>Name</label>
                   <textarea
+                    name="customConditionName"
                     value={customConditionName}
                     onChange={(e) => setCustomConditionName(e.target.value)}
                     rows={1}
@@ -1096,6 +1097,7 @@ export default function MainCode() {
                 <div className="form-group">
                   <label>Description</label>
                   <textarea
+                    name="customConditionDescription"
                     value={customConditionDescription}
                     onChange={(e) => setCustomConditionDescription(e.target.value)}
                     rows={3}

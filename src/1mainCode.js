@@ -497,32 +497,43 @@ export default function MainCode() {
   return (
    <>
     {isSettingsModalOpen && (
-      <div className="modal-overlay settings-modal">
-        <div className="modal">
-          <h2>Settings</h2>
-          <div className="settings-button-group">
-            <button
-              className="settings-action-button"
-              onClick={handleNewCombat}
-            >
-              New Combat
-            </button>
-            <button
-              className="settings-action-button"
-              onClick={handleFullReset}
-            >
-              Full Reset
-            </button>
-          </div>
-          <button
-            className="close-modal-button"
-            onClick={() => setIsSettingsModalOpen(false)}
-          >
-            X
-          </button>
+    <div className="modal-overlay settings-modal">
+      <div className="modal">
+        <h2>Settings</h2>
+        <div className="settings-caution-text">
+          Caution: these actions cannot be undone!
         </div>
+        <div className="new-combat-button-and-description">
+            <button
+            className="settings-action-button"
+            onClick={handleNewCombat}
+          >
+            New Combat
+          </button>
+          <div className="settings-description-text new-combat-description-text">
+            • Changes the Round count to 0, <br></br> • Resets all conditions <br></br> • Removes all characters (except for player characters)
+          </div>
+        </div>
+        <div className="full-reset-button-and-description">          
+          <button
+            className="settings-action-button"
+            onClick={handleFullReset}
+          >
+            Full Reset
+          </button>
+          <div className="settings-description-text full-reset-description-text">
+            • Changes the Round count to 0, <br></br> • Resets all conditions <br></br> • Removes all characters
+          </div>
+        </div>
+        <button
+          className="close-modal-button"
+          onClick={() => setIsSettingsModalOpen(false)}
+        >
+          X
+        </button>
       </div>
-    )}
+    </div>
+  )}
 
     <div className="wrapper">
       <div className="container">

@@ -1,9 +1,4 @@
 # Upcoming Features
-• Fix the Character Drop Down Menu to be on top of the rows
-• When pressing "Next" jump to current character (up or down, depending on what's needed)
-• Add Condition must select a Character
-• Adding Custom Conditions
-• Expirations for Conditions
 • Add a note explaining that the Conditions are using 2024 Rules
 • Settings Gear: Tick boxes to select which things to remove to reset the combat.
 

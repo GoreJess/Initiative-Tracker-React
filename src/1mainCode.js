@@ -66,6 +66,30 @@ export default function MainCode() {
 
   const [toggleAddConditionEnforcementMessage, setToggleAddConditionEnforcementMessage] = useState(false);
 
+  const [conditionDescriptions, setConditionDescriptions] = useState({
+    Blinded: "• Can’t See. You can’t see and automatically fail any ability check that requires sight. ???• Attacks Affected. Attack rolls against you have Advantage, and your attack rolls have Disadvantage.",
+    Charmed: "• Can’t Harm the Charmer. You can’t attack the charmer or target the charmer with damaging abilities or magical effects.???• Social Advantage. The charmer has Advantage on any ability check to interact with you socially.",
+    Deafened: "• Can’t Hear. You can’t hear and automatically fail any ability check that requires hearing.",
+    Frightened: "• Ability Checks and Attacks Affected. You have Disadvantage on ability checks and attack rolls while the source of fear is within line of sight.???• Can’t Approach. You can’t willingly move closer to the source of fear.",
+    Grappled: "• Speed 0. Your Speed is 0 and can’t increase.???• Attacks Affected. You have Disadvantage on attack rolls against any target other than the grappler.???• Movable. The grappler can drag or carry you when it moves, but every foot of movement costs it 1 extra foot unless you are Tiny or two or more sizes smaller than it.",
+    Incapacitated: "• Inactive. You can’t take any action, Bonus Action, or Reaction.???• No Concentration. Your Concentration is broken.???• Speechless. You can’t speak.???• Surprised. If you’re Incapacitated when you roll Initiative, you have Disadvantage on the roll.",
+    Invisible: "• Surprise. If you’re Invisible when you roll Initiative, you have Advantage on the roll.???• Concealed. You aren’t affected by any effect that requires its target to be seen unless the effect’s creator can somehow see you. Any equipment you are wearing or carrying is also concealed.???• Attacks Affected. Attack rolls against you have Disadvantage, and your attack rolls have Advantage. If a creature can somehow see you, you don’t gain this benefit against that creature.",
+    Paralyzed: "• Incapacitated. You have the Incapacitated condition.???• Speed 0. Your Speed is 0 and can’t increase.???• Saving Throws Affected. You automatically fail Strength and Dexterity saving throws.???• Attacks Affected. Attack rolls against you have Advantage.???• Automatic Critical Hits. Any attack roll that hits you is a Critical Hit if the attacker is within 5 feet of you.",
+    Petrified: "• Turned to Inanimate Substance. You are transformed, along with any nonmagical objects you are wearing and carrying, into a solid inanimate substance (usually stone). Your weight increases by a factor of ten, and you cease aging.???• Incapacitated. You have the Incapacitated condition.???• Speed 0. Your Speed is 0 and can’t increase.???• Attacks Affected. Attack rolls against you have Advantage.???• Saving Throws Affected. You automatically fail Strength and Dexterity saving throws.???• Resist Damage. You have Resistance to all damage.???• Poison Immunity. You have Immunity to the Poisoned condition.",
+    Poisoned: "• Ability Checks and Attacks Affected. You have Disadvantage on attack rolls and ability checks.",
+    Prone: "• Restricted Movement. Your only movement options are to crawl or to spend an amount of movement equal to half your Speed (round down) to right yourself and thereby end the condition. If your Speed is 0, you can’t right yourself.???• Attacks Affected. You have Disadvantage on attack rolls. An attack roll against you has Advantage if the attacker is within 5 feet of you. Otherwise, that attack roll has Disadvantage.",
+    Restrained: "• Speed 0. Your Speed is 0 and can’t increase.???• Attacks Affected. Attack rolls against you have Advantage, and your attack rolls have Disadvantage.???• Saving Throws Affected. You have Disadvantage on Dexterity saving throws.",
+    Stunned: "• Incapacitated. You have the Incapacitated condition.???• Saving Throws Affected. You automatically fail Strength and Dexterity saving throws.???• Attacks Affected. Attack rolls against you have Advantage.",
+    Unconscious: "• Inert. You have the Incapacitated and Prone conditions, and you drop whatever you’re holding. When this condition ends, you remain Prone.???• Speed 0. Your Speed is 0 and can’t increase.???• Attacks Affected. Attack rolls against you have Advantage.???• Saving Throws Affected. You automatically fail Strength and Dexterity saving throws.???• Automatic Critical Hits. Any attack roll that hits you is a Critical Hit if the attacker is within 5 feet of you.???• Unaware. You’re unaware of your surroundings.",
+    Exhaustion1: "• D20 Tests Affected. When you make a D20 Test, the roll is reduced by 2.???• Speed Reduced. Your Speed is reduced by 5 feet.???• Removing Exhaustion Levels. Finishing a Long Rest removes 1 of your Exhaustion levels. When your Exhaustion level reaches 0, the condition ends.",
+    Exhaustion2: "• D20 Tests Affected. When you make a D20 Test, the roll is reduced by 4.???• Speed Reduced. Your Speed is reduced by 10 feet.???• Removing Exhaustion Levels. Finishing a Long Rest removes 1 of your Exhaustion levels. When your Exhaustion level reaches 0, the condition ends.",
+    Exhaustion3: "• D20 Tests Affected. When you make a D20 Test, the roll is reduced by 6.???• Speed Reduced. Your Speed is reduced by 15 feet.???• Removing Exhaustion Levels. Finishing a Long Rest removes 1 of your Exhaustion levels. When your Exhaustion level reaches 0, the condition ends.",
+    Exhaustion4: "• D20 Tests Affected. When you make a D20 Test, the roll is reduced by 8.???• Speed Reduced. Your Speed is reduced by 20 feet.???• Removing Exhaustion Levels. Finishing a Long Rest removes 1 of your Exhaustion levels. When your Exhaustion level reaches 0, the condition ends.",
+    Exhaustion5: "• D20 Tests Affected. When you make a D20 Test, the roll is reduced by 10.???• Speed Reduced. Your Speed is reduced by 25 feet.???• Removing Exhaustion Levels. Finishing a Long Rest removes 1 of your Exhaustion levels. When your Exhaustion level reaches 0, the condition ends.",
+    Exhaustion6: "• You are Dead.???• If you are revived after dying this way, you return to life with Exhaustion5.",
+    "(Custom)": "Filler description for custom condition.",
+  });  
+
   // const handleAddCondition = (rowIndex, conditions) => {
   //   const updatedData = [...rowData];
   //   conditions.forEach((condition) => {
@@ -252,30 +276,6 @@ export default function MainCode() {
         : [...prev, character]
     );
   };
-
-  const conditionDescriptions = {
-    Blinded: "• Can’t See. You can’t see and automatically fail any ability check that requires sight. \n• Attacks Affected. Attack rolls against you have Advantage, and your attack rolls have Disadvantage.",
-    Charmed: "• Can’t Harm the Charmer. You can’t attack the charmer or target the charmer with damaging abilities or magical effects.\n• Social Advantage. The charmer has Advantage on any ability check to interact with you socially.",
-    Deafened: "• Can’t Hear. You can’t hear and automatically fail any ability check that requires hearing.",
-    Frightened: "• Ability Checks and Attacks Affected. You have Disadvantage on ability checks and attack rolls while the source of fear is within line of sight.\n• Can’t Approach. You can’t willingly move closer to the source of fear.",
-    Grappled: "• Speed 0. Your Speed is 0 and can’t increase.\n• Attacks Affected. You have Disadvantage on attack rolls against any target other than the grappler.\n• Movable. The grappler can drag or carry you when it moves, but every foot of movement costs it 1 extra foot unless you are Tiny or two or more sizes smaller than it.",
-    Incapacitated: "• Inactive. You can’t take any action, Bonus Action, or Reaction.\n• No Concentration. Your Concentration is broken.\n• Speechless. You can’t speak.\n• Surprised. If you’re Incapacitated when you roll Initiative, you have Disadvantage on the roll.",
-    Invisible: "• Surprise. If you’re Invisible when you roll Initiative, you have Advantage on the roll.\n• Concealed. You aren’t affected by any effect that requires its target to be seen unless the effect’s creator can somehow see you. Any equipment you are wearing or carrying is also concealed.\n• Attacks Affected. Attack rolls against you have Disadvantage, and your attack rolls have Advantage. If a creature can somehow see you, you don’t gain this benefit against that creature.",
-    Paralyzed: "• Incapacitated. You have the Incapacitated condition.\n• Speed 0. Your Speed is 0 and can’t increase.\n• Saving Throws Affected. You automatically fail Strength and Dexterity saving throws.\n• Attacks Affected. Attack rolls against you have Advantage.\n• Automatic Critical Hits. Any attack roll that hits you is a Critical Hit if the attacker is within 5 feet of you.",
-    Petrified: "• Turned to Inanimate Substance. You are transformed, along with any nonmagical objects you are wearing and carrying, into a solid inanimate substance (usually stone). Your weight increases by a factor of ten, and you cease aging.\n• Incapacitated. You have the Incapacitated condition.\n• Speed 0. Your Speed is 0 and can’t increase.\n• Attacks Affected. Attack rolls against you have Advantage.\n• Saving Throws Affected. You automatically fail Strength and Dexterity saving throws.\n• Resist Damage. You have Resistance to all damage.\n• Poison Immunity. You have Immunity to the Poisoned condition.",
-    Poisoned: "• Ability Checks and Attacks Affected. You have Disadvantage on attack rolls and ability checks.",
-    Prone: "• Restricted Movement. Your only movement options are to crawl or to spend an amount of movement equal to half your Speed (round down) to right yourself and thereby end the condition. If your Speed is 0, you can’t right yourself.\n• Attacks Affected. You have Disadvantage on attack rolls. An attack roll against you has Advantage if the attacker is within 5 feet of you. Otherwise, that attack roll has Disadvantage.",
-    Restrained: "• Speed 0. Your Speed is 0 and can’t increase.\n• Attacks Affected. Attack rolls against you have Advantage, and your attack rolls have Disadvantage.\n• Saving Throws Affected. You have Disadvantage on Dexterity saving throws.",
-    Stunned: "• Incapacitated. You have the Incapacitated condition.\n• Saving Throws Affected. You automatically fail Strength and Dexterity saving throws.\n• Attacks Affected. Attack rolls against you have Advantage.",
-    Unconscious: "• Inert. You have the Incapacitated and Prone conditions, and you drop whatever you’re holding. When this condition ends, you remain Prone.\n• Speed 0. Your Speed is 0 and can’t increase.\n• Attacks Affected. Attack rolls against you have Advantage.\n• Saving Throws Affected. You automatically fail Strength and Dexterity saving throws.\n• Automatic Critical Hits. Any attack roll that hits you is a Critical Hit if the attacker is within 5 feet of you.\n• Unaware. You’re unaware of your surroundings.",
-    Exhaustion1: "• D20 Tests Affected. When you make a D20 Test, the roll is reduced by 2.\n• Speed Reduced. Your Speed is reduced by 5 feet.\n• Removing Exhaustion Levels. Finishing a Long Rest removes 1 of your Exhaustion levels. When your Exhaustion level reaches 0, the condition ends.",
-    Exhaustion2: "• D20 Tests Affected. When you make a D20 Test, the roll is reduced by 4.\n• Speed Reduced. Your Speed is reduced by 10 feet.\n• Removing Exhaustion Levels. Finishing a Long Rest removes 1 of your Exhaustion levels. When your Exhaustion level reaches 0, the condition ends.",
-    Exhaustion3: "• D20 Tests Affected. When you make a D20 Test, the roll is reduced by 6.\n• Speed Reduced. Your Speed is reduced by 15 feet.\n• Removing Exhaustion Levels. Finishing a Long Rest removes 1 of your Exhaustion levels. When your Exhaustion level reaches 0, the condition ends.",
-    Exhaustion4: "• D20 Tests Affected. When you make a D20 Test, the roll is reduced by 8.\n• Speed Reduced. Your Speed is reduced by 20 feet.\n• Removing Exhaustion Levels. Finishing a Long Rest removes 1 of your Exhaustion levels. When your Exhaustion level reaches 0, the condition ends.",
-    Exhaustion5: "• D20 Tests Affected. When you make a D20 Test, the roll is reduced by 10.\n• Speed Reduced. Your Speed is reduced by 25 feet.\n• Removing Exhaustion Levels. Finishing a Long Rest removes 1 of your Exhaustion levels. When your Exhaustion level reaches 0, the condition ends.",
-    Exhaustion6: "• You are Dead.\n• If you are revived after dying this way, you return to life with Exhaustion5.",
-    "(Custom)": "Filler description for custom condition.",
-  };  
 
   const handleNextRound = () => {
       setRound((prevRound) => {
@@ -684,7 +684,7 @@ export default function MainCode() {
                       </div>
                       <div>
                         {(conditionDescriptions[typeof condition === "object" ? condition.name : condition] || "Filler description for this condition.")
-                          .split('\n')
+                          .split('???')
                           .map((line, idx) => (
                             <React.Fragment key={idx}>
                               {line}
@@ -733,7 +733,7 @@ export default function MainCode() {
                         </div>
                         <div>
                           {(conditionDescriptions[typeof condition === "object" ? condition.name : condition] || "Filler description for this condition.")
-                            .split('\n')
+                            .split('???')
                             .map((line, idx) => (
                               <React.Fragment key={idx}>
                                 {line}
@@ -1058,6 +1058,8 @@ export default function MainCode() {
                     }].sort((a, b) => a.name.localeCompare(b.name))
                   );
 
+                  setConditionDescriptions({...conditionDescriptions, [newName]: customConditionDescription});
+                  console.log(conditionDescriptions);
 
                   setShowCustomConditionForm(false);
                   setCustomConditionName('');

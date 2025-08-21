@@ -25,15 +25,15 @@ export default function MainCode() {
   const [affiliation, setAffiliation] = useState('');
 
   const [rowVisibility, setRowVisibility] = useState(
-    Array(10).fill(false).map((_, index) => index === 0)
+    Array(20).fill(false).map((_, index) => index === 0)
   );
 
   const [overlayActive, setOverlayActive] = useState(
-    Array(10).fill(false).map((_, index) => index === 0)
+    Array(20).fill(false).map((_, index) => index === 0)
   );
 
   const [rowData, setRowData] = useState(
-    Array(10).fill({ name: '', affiliation: '', initiative: null, conditions: [] })
+    Array(20).fill({ name: '', affiliation: '', initiative: null, conditions: [] })
   );
 
   const [sortedRowData, setSortedRowData] = useState([]);
@@ -123,8 +123,8 @@ export default function MainCode() {
       initiative: null // Clear initiative input
     }));
 
-    // Fill up to 10 rows with empty slots if needed
-    while (updatedData.length < 10) {
+    // Fill up to 20 rows with empty slots if needed
+    while (updatedData.length < 20) {
       updatedData.push({ name: '', affiliation: '', initiative: null, conditions: [] });
       updatedVisibility.push(
         updatedData.length === 1
@@ -157,10 +157,10 @@ export default function MainCode() {
 
   const handleFullReset = () => {
     setRowData(
-      Array(10).fill({ name: '', affiliation: '', initiative: null, conditions: [] })
+      Array(20).fill({ name: '', affiliation: '', initiative: null, conditions: [] })
     );
-    setRowVisibility(Array(10).fill(false).map((_, idx) => idx === 0));
-    setOverlayActive(Array(10).fill(false).map((_, idx) => idx === 0));
+    setRowVisibility(Array(20).fill(false).map((_, idx) => idx === 0));
+    setOverlayActive(Array(20).fill(false).map((_, idx) => idx === 0));
     setRound(0);
     setShiftedRowIndex(null);
     setViewCharacterIndex(null);
@@ -511,7 +511,7 @@ export default function MainCode() {
             New Combat
           </button>
           <div className="settings-description-text new-combat-description-text">
-            • Changes the Round count to 0, <br></br> • Resets all conditions <br></br> • Removes all characters (except for player characters)
+            • Changes the Round count to 0 <br></br> • Resets all conditions <br></br> • Removes all characters (except for player characters)
           </div>
         </div>
         <div className="full-reset-button-and-description">          
@@ -522,7 +522,7 @@ export default function MainCode() {
             Full Reset
           </button>
           <div className="settings-description-text full-reset-description-text">
-            • Changes the Round count to 0, <br></br> • Resets all conditions <br></br> • Removes all characters
+            • Changes the Round count to 0 <br></br> • Resets all conditions <br></br> • Removes all characters
           </div>
         </div>
         <button
@@ -842,10 +842,10 @@ export default function MainCode() {
             updatedOverlay.splice(deleteConfirmIndex, 1);
 
             // Only add a new empty row if:
-            // - There are fewer than 10 rows
+            // - There are fewer than 20 rows
             // - There is NOT already an empty row (row with no name)
             // const hasEmptyRow = updatedData.some(row => !row.name);
-            // if (updatedData.length < 10 && !hasEmptyRow) {
+            // if (updatedData.length < 20 && !hasEmptyRow) {
               updatedData.push({ name: '', affiliation: '', initiative: null, conditions: [] });
               updatedVisibility.push(updatedData[updatedData.length - 2].name !== '' ? true : false); // or false, depending on your logic
               updatedOverlay.push(updatedData[updatedData.length - 2].name !== '' ? true : false);    // show the add-character button

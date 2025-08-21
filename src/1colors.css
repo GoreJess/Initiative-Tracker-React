@@ -12,4 +12,8 @@
     --good-condition-background: rgb(41, 194, 41);
     --neutral-condition-background: #8d888f;
     --view-character-background: #9c9c9c;
+    --player-character-text-color: #3400f1;
+    --enemy-character-text-color: #ff0000;
+    --ally-character-text-color: #feffad;
+    --neutral-character-text-color: #403a42;
 }

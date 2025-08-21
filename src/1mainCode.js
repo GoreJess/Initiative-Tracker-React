@@ -41,9 +41,6 @@ export default function MainCode() {
 
   const [shiftedRowIndex, setShiftedRowIndex] = useState(null); // Track the index of the shifted row
   
-  const rowHeight = 40; // px, adjust to match your row height
-  const connectorTop = shiftedRowIndex !== null ? shiftedRowIndex * rowHeight : 0;
-
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
 
   const [deleteConfirmIndex, setDeleteConfirmIndex] = useState(null);
@@ -444,19 +441,19 @@ export default function MainCode() {
   };
   
   const getTextColor = (affiliation) => {
-    switch (affiliation) {
-      case 'Player Character':
-        return 'darkblue';
-      case 'Enemy':
-        return 'red';
-      case 'Ally':
-        return 'purple';
-      case 'Neutral/Environmental':
-        return '#363636';
-      default:
-        return 'black';
-    }
-  };
+  switch (affiliation) {
+    case 'Player Character':
+      return 'var(--player-character-text-color)';
+    case 'Enemy':
+      return 'var(--enemy-character-text-color)';
+    case 'Ally':
+      return 'var(--ally-character-text-color)';
+    case 'Neutral/Environmental':
+      return 'var(--neutral-character-text-color)';
+    default:
+      return 'black';
+  }
+};
 
   const dropdownRef = useRef(null);
 
@@ -655,11 +652,7 @@ export default function MainCode() {
               ))}
             </div>
           </div>
-          <div
-              className="connector-box"
-              style={{ top: connectorTop }}
-            >
-            </div>
+
           <div className="conditions-list">
             {/* Banner */}
             <div className="conditions-list-banner">

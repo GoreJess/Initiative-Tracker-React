@@ -204,7 +204,7 @@
     justify-content: center;
     color: white;
     min-width: 0;
-    height: 100%;
+    height: 75px;
   }
 
 
@@ -235,8 +235,6 @@
 }
 
 .shifted-row {
-    transform: translateX(calc(100% - 98%)); /* Move the row to align with the left edge of .conditions-list */
-    transition: transform 0.5s ease; /* Smooth transition */
     background-color: var(--conditions-box-background); /* Change the background color to green when shifted */
     z-index: 15;
   }

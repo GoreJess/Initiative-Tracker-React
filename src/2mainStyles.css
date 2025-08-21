@@ -18,8 +18,8 @@ html, body {
   .container {
     display: flex;
     height: 100%; /* Full height of the wrapper */
-    gap: 0.7%; /* 1% gap between the boxes */
     box-sizing: border-box;
+    position: relative;
   }
  
   .initiative-list {
@@ -30,6 +30,26 @@ html, body {
     box-sizing: border-box; /* Include padding and borders in size calculations */
     background-color: var(--initiative-box-background);
   }
+
+  /* Connector box styles */
+.connector-box {
+  position: absolute;
+  left: 49%; /* Place it between the two lists (adjust if needed) */
+  width: 1%;
+  min-width: 32px;
+  max-width: 60px;
+  height: 48px; /* Match the height of a row, adjust as needed */
+  background: yellow;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  box-sizing: border-box;
+  transition: top 0.2s;
+  z-index: 2;
+}
  
   .conditions-list {
     flex-grow: 1;

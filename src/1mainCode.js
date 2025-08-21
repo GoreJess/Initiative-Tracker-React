@@ -36,10 +36,14 @@ export default function MainCode() {
     Array(20).fill({ name: '', affiliation: '', initiative: null, conditions: [] })
   );
 
+
   const [sortedRowData, setSortedRowData] = useState([]);
 
   const [shiftedRowIndex, setShiftedRowIndex] = useState(null); // Track the index of the shifted row
   
+  const rowHeight = 40; // px, adjust to match your row height
+  const connectorTop = shiftedRowIndex !== null ? shiftedRowIndex * rowHeight : 0;
+
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
 
   const [deleteConfirmIndex, setDeleteConfirmIndex] = useState(null);
@@ -651,6 +655,11 @@ export default function MainCode() {
               ))}
             </div>
           </div>
+          <div
+              className="connector-box"
+              style={{ top: connectorTop }}
+            >
+            </div>
           <div className="conditions-list">
             {/* Banner */}
             <div className="conditions-list-banner">

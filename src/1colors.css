@@ -1,15 +1,15 @@
 :root {
     --page-background: #e8e4d1;
-    --initiative-box-background: #ccb8b6;
-    --initiative-banner: darkred;
-    --conditions-box-background: #b6c6cc;
-    --conditions-expiration-background: #a2c2ce;
+    --initiative-box-background: #e2a29b;
+    --initiative-banner: rgb(163, 0, 0);
+    --conditions-box-background: #bcd3db;
+    --conditions-expiration-background: #8abcce;
     --character-modal-background: #e3bfbf;
     --condition-modal-background: #bfd1e3;
     --condition-list-banner-background: #0045d9;
     --condition-modal-section-background: #77b3bb;
-    --bad-condition-background: #ff8686;
-    --good-condition-background: rgb(140, 214, 140);
-    --neutral-condition-background: #96a8ae;
+    --bad-condition-background: #ff0000;
+    --good-condition-background: rgb(41, 194, 41);
+    --neutral-condition-background: #8d888f;
     --view-character-background: #9c9c9c;
 }

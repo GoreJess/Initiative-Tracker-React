@@ -4,13 +4,14 @@
   background-color: var(--condition-modal-background); /* ✅ this will now apply */
   padding: 20px;
   border-radius: 10px;
-  width: 200px;
+  width: 250px;
   margin-left: 5px; /* space between the two modals */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
   position: relative;
   z-index: 1; /* same level as other modal */
-  max-height: 600px;       /* maximum height */
+  max-height: 500px;       /* maximum height */
+  height: 500px;
 }
 
 .custom-condition-content {
@@ -37,37 +38,50 @@ border: none;
 border-radius: 5px;
 padding: 10px 15px;
 cursor: pointer;
+width: 80%;
 }
 
 .new-custom-condition-button:hover {
 background-color: #0056b3;
 }
 
-.affect-buttons button.positive {
-background-color: #002366;
-color: white;
-border: none;
-border-radius: 5px;
-padding: 5px;
-cursor: pointer;
+/* Prevent resizing for Name and Description textareas in the custom condition modal */
+.custom-condition-modal textarea {
+  resize: none;
+  width: 95%;
+  font-size: 1.05rem;
+  line-height: 1.4;
+  border-radius: 5px;
 }
 
-.affect-buttons button.neutral {
-background-color: #002366;
-color: white;
-border: none;
-border-radius: 5px;
-padding: 5px;
-cursor: pointer;
+/* Set specific heights for Name and Description textareas */
+.custom-condition-modal textarea[name="customConditionName"] {
+  height: 35px;      /* Example: 1 row tall */
 }
 
-.affect-buttons button.negative {
+.custom-condition-modal textarea[name="customConditionDescription"] {
+  height: 190px;      /* Example: 4-5 rows tall */
+}
+
+/* Make labels in the add custom condition form larger and bolder */
+.custom-condition-modal label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.affect-buttons button.positive, button.neutral, button.negative {
 background-color: #002366;
 color: white;
 border: none;
 border-radius: 5px;
 padding: 5px;
 cursor: pointer;
+width: 30%;
+height: 30px;
+margin-right: 1%;
+margin-left: 1%;
 }
 
 .affect-buttons button.selected.positive {
@@ -85,6 +99,26 @@ cursor: pointer;
   color: white;
 }
 
+/* Style for Add Condition and Cancel buttons in the custom condition modal */
+.custom-condition-modal .modal-button-group button[type="submit"],
+.custom-condition-modal .modal-button-group button[type="button"] {
+  background-color: #002366;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 7px 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-right: 20px;
+  cursor: pointer;
+  transition: background 0.2s;
+  height: 30px;
+}
+
+.custom-condition-modal .modal-button-group button[type="submit"]:hover,
+.custom-condition-modal .modal-button-group button[type="button"]:hover {
+  background-color: #0056b3;
+}
 
 .custom-condition-list {
   margin-top: 12px;
@@ -162,3 +196,4 @@ cursor: pointer;
   text-align: left;
   justify-content: flex-start;
 }
+

@@ -89,7 +89,35 @@ export default function MainCode() {
     Exhaustion5: "• D20 Tests Affected. When you make a D20 Test, the roll is reduced by 10.???• Speed Reduced. Your Speed is reduced by 25 feet.???• Removing Exhaustion Levels. Finishing a Long Rest removes 1 of your Exhaustion levels. When your Exhaustion level reaches 0, the condition ends.",
     Exhaustion6: "• You are Dead.???• If you are revived after dying this way, you return to life with Exhaustion5.",
     "(Custom)": "Filler description for custom condition.",
-  });  
+  });
+
+  const [conditionColors, setConditionColors] = useState({
+      Blinded: 'var(--bad-condition-background)',
+      Charmed: 'var(--bad-condition-background)',
+      Deafened: 'var(--bad-condition-background)',
+      Frightened: 'var(--bad-condition-background)',
+      Grappled: 'var(--bad-condition-background)',
+      Incapacitated: 'var(--bad-condition-background)',
+      Invisible: 'var(--good-condition-background)',
+      Paralyzed: 'var(--bad-condition-background)',
+      Petrified: 'var(--bad-condition-background)',
+      Poisoned: 'var(--bad-condition-background)',
+      Prone: 'var(--neutral-condition-background)',
+      Restrained: 'var(--bad-condition-background)',
+      Stunned: 'var(--bad-condition-background)',
+      Unconscious: 'var(--bad-condition-background)',
+      'Exhaustion1': 'var(--bad-condition-background)',
+      'Exhaustion2': 'var(--bad-condition-background)',
+      'Exhaustion3': 'var(--bad-condition-background)',
+      'Exhaustion4': 'var(--bad-condition-background)',
+      'Exhaustion5': 'var(--bad-condition-background)',
+      'Exhaustion6': 'var(--bad-condition-background)',
+      Other1: 'var(--neutral-condition-background)',
+      Other2: 'var(--neutral-condition-background)',
+      Other3: 'var(--neutral-condition-background)',
+      Other4: 'var(--neutral-condition-background)',
+      '(Custom)': 'var(--neutral-condition-background)',
+    });
 
   // const handleAddCondition = (rowIndex, conditions) => {
   //   const updatedData = [...rowData];
@@ -198,24 +226,30 @@ export default function MainCode() {
     const filteredSelectedConditions = selectedConditions.filter(cond => cond !== '(Custom)');
 
     // Enforce non-empty dropdowns and selections
-    if (expirationType === "round") {
-      if (expirationTiming === "uknown" || !expirationTarget ) {
+    if (expirationTiming !== 'unknown') {
+      if (expirationType === "round") {
+        if (!expirationTarget ) {
+          setToggleAddConditionEnforcementMessage(true);
+          return;
+        }
+      } else if (expirationType === "character") {
+        if (!expirationTarget || !expirationRound) {
+          setToggleAddConditionEnforcementMessage(true);
+          return;
+        }
+      } else {
         setToggleAddConditionEnforcementMessage(true);
         return;
       }
-    } else if (expirationType === "character") {
-      if (expirationTiming === "unknown" || !expirationTarget || !expirationRound) {
+      if (filteredSelectedConditions.length < 1 || selectedCharacters.length < 1) {
         setToggleAddConditionEnforcementMessage(true);
         return;
       }
     } else {
-      setToggleAddConditionEnforcementMessage(true);
-      return;
-    }
-
-    if (filteredSelectedConditions.length < 1 || selectedCharacters.length < 1) {
-      setToggleAddConditionEnforcementMessage(true);
-      return;
+      if (filteredSelectedConditions.length < 1 || selectedCharacters.length < 1) {
+        setToggleAddConditionEnforcementMessage(true);
+        return;
+      }
     }
 
     // Build the expiration string
@@ -409,36 +443,19 @@ export default function MainCode() {
   }
 
   const getConditionBackgroundColor = (condition) => {
-    const conditionColors = {
-      Blinded: 'var(--bad-condition-background)',
-      Charmed: 'var(--bad-condition-background)',
-      Deafened: 'var(--bad-condition-background)',
-      Frightened: 'var(--bad-condition-background)',
-      Grappled: 'var(--bad-condition-background)',
-      Incapacitated: 'var(--bad-condition-background)',
-      Invisible: 'var(--good-condition-background)',
-      Paralyzed: 'var(--bad-condition-background)',
-      Petrified: 'var(--bad-condition-background)',
-      Poisoned: 'var(--bad-condition-background)',
-      Prone: 'var(--neutral-condition-background)',
-      Restrained: 'var(--bad-condition-background)',
-      Stunned: 'var(--bad-condition-background)',
-      Unconscious: 'var(--bad-condition-background)',
-      'Exhaustion1': 'var(--bad-condition-background)',
-      'Exhaustion2': 'var(--bad-condition-background)',
-      'Exhaustion3': 'var(--bad-condition-background)',
-      'Exhaustion4': 'var(--bad-condition-background)',
-      'Exhaustion5': 'var(--bad-condition-background)',
-      'Exhaustion6': 'var(--bad-condition-background)',
-      Other1: 'var(--neutral-condition-background)',
-      Other2: 'var(--neutral-condition-background)',
-      Other3: 'var(--neutral-condition-background)',
-      Other4: 'var(--neutral-condition-background)',
-      '(Custom)': 'var(--neutral-condition-background)',
-    };
-  
     return conditionColors[condition] || 'var(--neutral-condition-background)'; // Default to neutral condition background
   };
+
+  const getMappedColorType = (affectType) => {
+    switch (affectType) {
+      case 'Positive':
+        return 'var(--good-condition-background)';
+      case 'Negative':
+        return 'var(--bad-condition-background)';
+      default:
+        return 'var(--neutral-condition-background)';
+    }
+  }
   
   const getTextColor = (affiliation) => {
   switch (affiliation) {
@@ -947,7 +964,7 @@ export default function MainCode() {
                   setExpirationRound(""); // Reset fourth dropdown
                 }}
               >
-                <option>NA / Unknown</option>
+                <option value="unknown">NA / Unknown</option>
                 <option>At the beginning of</option>
                 <option>Just before</option>
                 <option>Just after</option>
@@ -1072,7 +1089,7 @@ export default function MainCode() {
                   );
 
                   setConditionDescriptions({...conditionDescriptions, [newName]: customConditionDescription});
-                  console.log(conditionDescriptions);
+                  setConditionColors({...conditionColors, [newName]: getMappedColorType(customConditionAffect)})
 
                   setShowCustomConditionForm(false);
                   setCustomConditionName('');

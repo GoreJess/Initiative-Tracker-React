@@ -8,10 +8,11 @@
 • Add a note explaining that the Conditions are using 2024 Rules
 • Settings Gear: Tick boxes to select which things to remove to reset the combat.
 ## v.3
-• Pictures of the characters next to the name
-• Maybe include a picture in the Conditions area? (optional)
+• Cookies so the stuff is saved even after the browser is closed.
 ## v.4
 • Add a option in the settings to choose the theme
+• Pictures of the characters next to the name
+• Maybe include a picture in the Conditions area? (optional)
 
 # Getting Started with Create React App
 

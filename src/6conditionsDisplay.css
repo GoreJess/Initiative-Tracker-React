@@ -61,6 +61,10 @@
   .add-condition-button:active {
     background-color: gray;
   }
+
+  .condition-description strong {
+  text-decoration: underline;
+}
   
  .conditions-list-content {
   flex: 1 1 0;
@@ -71,6 +75,7 @@
   scrollbar-width: thin;
   scrollbar-color: var(--condition-list-banner-background, #333) transparent;
   width: 100%;
+  font-size: large;
 }
 
   .conditions-list-content::-webkit-scrollbar {
@@ -103,7 +108,12 @@
     flex-direction: row;
     width: 100%;
     flex: 1; /* Each row takes up an equal portion of the remaining height */
+    margin-bottom: 10px;
   }
+
+.conditions-list-content .conditions-row:last-child {
+  border-bottom: none;
+}
   
   .remove-condition {
     background-color: transparent;

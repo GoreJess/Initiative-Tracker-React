@@ -1,6 +1,17 @@
 # Upcoming Features
+## v.1
+• When there are too many characters that we need to scroll, and I click on "Next", have it automatically scroll so that we see the character's name. 
+## v.2
+• QOL key strokes (hot keys for next/back, etc)
+   • Keys Right Arrow, D, Enter, or SpaceBar would do the Next button, and adding Keys Left Arrow, S, and Backspace would do the Back button
+• Add an option for quantity when adding characters
 • Add a note explaining that the Conditions are using 2024 Rules
 • Settings Gear: Tick boxes to select which things to remove to reset the combat.
+## v.3
+• Pictures of the characters next to the name
+• Maybe include a picture in the Conditions area? (optional)
+## v.4
+• Add a option in the settings to choose the theme
 
 # Getting Started with Create React App
 

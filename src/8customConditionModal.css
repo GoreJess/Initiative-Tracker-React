@@ -10,8 +10,8 @@
   text-align: center;
   position: relative;
   z-index: 1; /* same level as other modal */
-  max-height: 500px;       /* maximum height */
-  height: 500px;
+  max-height: 550px;       /* maximum height */
+  height: 550px;
 }
 
 .custom-condition-content {
@@ -185,11 +185,33 @@ margin-left: 1%;
   filter: brightness(0.8);
 }
 
+.edit-custom-condition {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
 .selectable-item {
   display: flex;
   align-items: center;
   justify-content: flex-start;  /* ✅ keep items left-aligned */
   text-align: left;             /* ✅ ensure text wraps left */
+}
+
+/* When a custom condition list item is selected, make its text white */
+.custom-condition-list .custom-condition-item.selected {
+  color: white;
+}
+
+.custom-condition-item {
+font-size: large;
 }
 
 .custom-condition-modal .selectable-item {

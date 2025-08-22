@@ -65,6 +65,8 @@ export default function MainCode() {
   const [customConditionDescription, setCustomConditionDescription] = useState('');
   const [customConditions, setCustomConditions] = useState([]);
 
+  const [editCustomConditionIndex, setEditCustomConditionIndex] = useState(null);
+
   const [toggleAddConditionEnforcementMessage, setToggleAddConditionEnforcementMessage] = useState(false);
 
   const [conditionDescriptions, setConditionDescriptions] = useState({
@@ -1074,29 +1076,46 @@ export default function MainCode() {
                 </button>
             ) : (
               <form
-                onSubmit={(e) => {
+                onSubmit={e => {
                   e.preventDefault();
-
                   const newName = customConditionName.trim();
                   if (!newName) return;
 
-                  setCustomConditions((prevConditions) =>
-                    [...prevConditions, {
-                      name: newName,
-                      affect: customConditionAffect,
-                      description: customConditionDescription,
-                    }].sort((a, b) => a.name.localeCompare(b.name))
-                  );
+                  if (editCustomConditionIndex !== null) {
+                    // Edit existing
+                    setCustomConditions(prevConditions =>
+                      prevConditions.map((cond, idx) =>
+                        idx === editCustomConditionIndex
+                          ? {
+                              ...cond,
+                              name: newName,
+                              affect: customConditionAffect,
+                              description: customConditionDescription,
+                            }
+                          : cond
+                      )
+                    );
+                    setEditCustomConditionIndex(null);
+                  } else {
+                    // Add new
+                    setCustomConditions(prevConditions =>
+                      [...prevConditions, {
+                        name: newName,
+                        affect: customConditionAffect,
+                        description: customConditionDescription,
+                      }].sort((a, b) => a.name.localeCompare(b.name))
+                    );
+                  }
 
                   setConditionDescriptions({...conditionDescriptions, [newName]: customConditionDescription});
-                  setConditionColors({...conditionColors, [newName]: getMappedColorType(customConditionAffect)})
+                  setConditionColors({...conditionColors, [newName]: getMappedColorType(customConditionAffect)});
 
                   setShowCustomConditionForm(false);
                   setCustomConditionName('');
                   setCustomConditionAffect('');
                   setCustomConditionDescription('');
                 }}
-            >
+              >
                 <div className="form-group">
                   <label>Name</label>
                   <textarea
@@ -1139,10 +1158,11 @@ export default function MainCode() {
                   <button
                     type="button"
                     onClick={() => {
-                      setShowCustomConditionForm(false); // Hide the form
-                      setCustomConditionName('');        // Clear name input
-                      setCustomConditionAffect('');      // Clear affect selection
-                      setCustomConditionDescription(''); // Clear description
+                      setShowCustomConditionForm(false);
+                      setCustomConditionName('');
+                      setCustomConditionAffect('');
+                      setCustomConditionDescription('');
+                      setEditCustomConditionIndex(null); // Reset edit state
                     }}
                   >
                     Cancel
@@ -1161,7 +1181,7 @@ export default function MainCode() {
                       return (
                         <div
                           key={index}
-                          className={`selectable-item ${condition.affect?.toLowerCase()}${isSelected ? ' selected' : ''}`}
+                          className={`custom-condition-item selectable-item ${condition.affect?.toLowerCase()}${isSelected ? ' selected' : ''}`}
                           onClick={() => handleConditionClick(condition.name)}
                         >
                           <button
@@ -1177,6 +1197,25 @@ export default function MainCode() {
                             <img
                               src={require('./media/minus-icon.png')}
                               alt="Remove"
+                              className="condition-icon"
+                            />
+                          </button>
+                          <button
+                            type="button"
+                            className="edit-custom-condition"
+                            onClick={e => {
+                              e.stopPropagation();
+                              setCustomConditionName(condition.name);
+                              setCustomConditionAffect(condition.affect);
+                              setCustomConditionDescription(condition.description);
+                              setShowCustomConditionForm(true);
+                              setEditCustomConditionIndex(index); // Track which one is being edited
+                            }}
+                            style={{ marginRight: 8 }}
+                          >
+                            <img
+                              src={require('./media/pencil-icon.png')}
+                              alt="Edit"
                               className="condition-icon"
                             />
                           </button>

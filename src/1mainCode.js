@@ -377,17 +377,9 @@ export default function MainCode() {
   const scrollToCurrentShiftedRow = () => {
     setTimeout(() => {
       const initiativeListElement = document.getElementsByClassName('initiative-list-content')[0];
-      const isListScrollable = initiativeListElement.scrollHeight > initiativeListElement.clientHeight;
-
-      if (isListScrollable) {
         const shiftedRowElement = initiativeListElement.querySelector('.shifted-row');
-
-        if (shiftedRowElement) {
-          const shiftedHeightScrollDistance = (shiftedRowElement.offsetTop + shiftedRowElement.clientHeight) - initiativeListElement.clientHeight;
-          initiativeListElement.scrollTo({top: shiftedHeightScrollDistance});
-        }
-      }
-    }, 2)
+        shiftedRowElement.scrollIntoView({behavior: "smooth", block: "center"});
+    }, 0)
   }
   
   const handleOpenModal = (rowIndex) => {

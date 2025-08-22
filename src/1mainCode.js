@@ -341,6 +341,8 @@ export default function MainCode() {
         // Increment the round counter only if we loop back to the first row
         return nextRowIndex === 0 ? prevRound + 1 : prevRound;
       });
+
+      scrollToCurrentShiftedRow();
     };
   
   const handlePreviousRound = () => {
@@ -368,7 +370,25 @@ export default function MainCode() {
       // Decrement the round counter only if we loop back to the last row
       return previousRowIndex === sortedRows.length - 1 ? Math.max(prevRound - 1, 0) : prevRound;
     });
+
+    scrollToCurrentShiftedRow();
   };
+
+  const scrollToCurrentShiftedRow = () => {
+    setTimeout(() => {
+      const initiativeListElement = document.getElementsByClassName('initiative-list-content')[0];
+      const isListScrollable = initiativeListElement.scrollHeight > initiativeListElement.clientHeight;
+
+      if (isListScrollable) {
+        const shiftedRowElement = initiativeListElement.querySelector('.shifted-row');
+
+        if (shiftedRowElement) {
+          const shiftedHeightScrollDistance = (shiftedRowElement.offsetTop + shiftedRowElement.clientHeight) - initiativeListElement.clientHeight;
+          initiativeListElement.scrollTo({top: shiftedHeightScrollDistance});
+        }
+      }
+    }, 2)
+  }
   
   const handleOpenModal = (rowIndex) => {
     setIsModalOpen(rowIndex);

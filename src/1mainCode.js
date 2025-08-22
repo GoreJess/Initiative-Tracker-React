@@ -7,12 +7,13 @@ import './5addConditionModal.css';
 import './6conditionsDisplay.css';
 import plusIcon from './media/plus-icon.png';
 import viewIcon from './media/view-icon.png';
-import './7deleteCharacterModal.css';
+import './7settingsModal.css';
 import minusIcon from './media/minus-icon.png';
 import gearIcon from './media/gear-icon.png';
 import './8customConditionModal.css';
 import pencilIcon from './media/pencil-icon.png';
 import trashcanIcon from './media/trashcan-icon.png';
+import './9deleteCharacterModal.css';
 
 export default function MainCode() {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
@@ -839,7 +840,7 @@ export default function MainCode() {
     <div className="modal">
       <p>
         Are you sure you want to delete{' '}
-        <span style={{ color: 'darkblue' }}>
+        <span style={{ color: 'red' }}>
           {rowData[deleteConfirmIndex]?.name || 'this character'}
         </span>
         ?<br></br> This action cannot be undone.

@@ -1,12 +1,17 @@
 # Upcoming Features
 ## v.1
-• When there are too many characters that we need to scroll, and I click on "Next", have it automatically scroll so that we see the character's name. 
+• Option to edit the expiration on conditions
+• Edit the max height of the custom condition list
+- Settings Gear: Tick boxes to select which things to remove to reset the combat.
 ## v.2
+• Make it so that we can have breaks in the description of the custom conditions
 • QOL key strokes (hot keys for next/back, etc)
    • Keys Right Arrow, D, Enter, or SpaceBar would do the Next button, and adding Keys Left Arrow, S, and Backspace would do the Back button
 • Add an option for quantity when adding characters
 • Add a note explaining that the Conditions are using 2024 Rules
-• Settings Gear: Tick boxes to select which things to remove to reset the combat.
+• Have it when you click "Next", they move to the bottom of the list so that the current turn is always on top.
+• Semi-transparent gradient to the top if we are scrolled down and there are names at the top that aren't being shown. 
+• Web Aim Contrast Checker (can use to tell how easy it is to read something)
 ## v.3
 • Cookies so the stuff is saved even after the browser is closed.
 ## v.4

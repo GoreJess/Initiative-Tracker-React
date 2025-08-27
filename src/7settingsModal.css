@@ -11,23 +11,30 @@
   text-align: center;
 }
 
-.new-combat-button-and-description {
-  margin-top: 12px;
-  margin-bottom: 30px;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.settings-checkbox-group {
+  text-align: left;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
-.full-reset-button-and-description {
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.settings-checkbox-group label {
+  text-align: left;
+  justify-content: flex-start;
+  align-items: flex-start;
+  display: block;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
 }
 
-.settings-action-button {
+.settings-checkbox-group input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--initiative-banner); /* Optional: matches your theme color */
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.settings-submit-button {
   background-color: var(--initiative-banner);
   color: white;
   border: none;
@@ -42,7 +49,7 @@
   width: 100%;
 }
 
-.settings-action-button:hover {
+.settings-submit-button:hover {
   background-color: black;
 }
 

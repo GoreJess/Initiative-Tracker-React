@@ -15,7 +15,7 @@
 }
 
 .custom-condition-content {
-    max-height: 475px;
+    max-height: 450px;
     overflow-y: auto;        /* enable vertical scrolling if content is taller */
     scrollbar-width: thin;
     scrollbar-color: #002366 transparent;

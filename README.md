@@ -1,8 +1,6 @@
 # Upcoming Features
 ## v.1
-• Option to edit the expiration on conditions
-• Edit the max height of the custom condition list
-- Settings Gear: Tick boxes to select which things to remove to reset the combat.
+• (All expected features for version 1 are complete!) 
 ## v.2
 • Make it so that we can have breaks in the description of the custom conditions
 • QOL key strokes (hot keys for next/back, etc)

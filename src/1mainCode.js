@@ -17,6 +17,24 @@ import './9deleteCharacterModal.css';
 
 export default function MainCode() {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [resetRound, setResetRound] = useState(false);
+  const [removeAllConditions, setRemoveAllConditions] = useState(false);
+  const [removeNeutral, setRemoveNeutral] = useState(false);
+  const [removeEnemies, setRemoveEnemies] = useState(false);
+  const [removeAllies, setRemoveAllies] = useState(false);
+  const [removePlayers, setRemovePlayers] = useState(false);
+  const [fullReset, setFullReset] = useState(false);
+
+  // Add this helper function inside your MainCode component:
+const resetSettingsCheckboxes = () => {
+  setResetRound(false);
+  setRemoveAllConditions(false);
+  setRemoveNeutral(false);
+  setRemoveEnemies(false);
+  setRemoveAllies(false);
+  setRemovePlayers(false);
+  setFullReset(false);
+};
 
   const [round, setRound] = useState(0); // Add state for the round number
   const [errorMessage, setErrorMessage] = useState(''); // Add state for error message
@@ -530,43 +548,213 @@ export default function MainCode() {
   return (
    <>
     {isSettingsModalOpen && (
-    <div className="modal-overlay settings-modal">
-      <div className="modal">
-        <h2>Settings</h2>
-        <div className="settings-caution-text">
-          Caution: these actions cannot be undone!
-        </div>
-        <div className="new-combat-button-and-description">
+      <div className="modal-overlay settings-modal">
+        <div className="modal">
+          <h2>Settings</h2>
+          <div className="settings-caution-text">
+            Caution: these actions cannot be undone!
+          </div>
+          <form
+            onSubmit={e => {
+              e.preventDefault();
+              if (fullReset) {
+                handleFullReset();
+              } else {
+                if (resetRound) setRound(0);
+                if (removeAllConditions) {
+                  setRowData(prev =>
+                    prev.map(row => ({ ...row, conditions: [] }))
+                  );
+                }
+                if (removeNeutral) {
+                  let filteredIndices = rowData
+                    .map((row, i) => row.affiliation !== 'Neutral/Environmental' ? i : null)
+                    .filter(i => i !== null);
+
+                  setRowData(prev => {
+                    let filtered = prev.filter(row => row.affiliation !== 'Neutral/Environmental');
+                    while (filtered.length < 20) {
+                      filtered.push({ name: '', affiliation: '', initiative: null, conditions: [] });
+                    }
+                    return filtered;
+                  });
+                  setRowVisibility(prev => {
+                    let filtered = filteredIndices.map(i => prev[i]);
+                    while (filtered.length < 20) {
+                      filtered.push(false);
+                    }
+                    return filtered;
+                  });
+                  setOverlayActive(prev => {
+                    let filtered = filteredIndices.map(i => prev[i]);
+                    while (filtered.length < 20) {
+                      filtered.push(false);
+                    }
+                    return filtered;
+                  });
+                }
+                if (removeEnemies) {
+                  let filteredIndices = rowData
+                    .map((row, i) => row.affiliation !== 'Enemy' ? i : null)
+                    .filter(i => i !== null);
+
+                  setRowData(prev => {
+                    let filtered = prev.filter(row => row.affiliation !== 'Enemy');
+                    while (filtered.length < 20) {
+                      filtered.push({ name: '', affiliation: '', initiative: null, conditions: [] });
+                    }
+                    return filtered;
+                  });
+                  setRowVisibility(prev => {
+                    let filtered = filteredIndices.map(i => prev[i]);
+                    while (filtered.length < 20) {
+                      filtered.push(false);
+                    }
+                    return filtered;
+                  });
+                  setOverlayActive(prev => {
+                    let filtered = filteredIndices.map(i => prev[i]);
+                    while (filtered.length < 20) {
+                      filtered.push(false);
+                    }
+                    return filtered;
+                  });
+                }
+                if (removeAllies) {
+                  let filteredIndices = rowData
+                    .map((row, i) => row.affiliation !== 'Ally' ? i : null)
+                    .filter(i => i !== null);
+
+                  setRowData(prev => {
+                    let filtered = prev.filter(row => row.affiliation !== 'Ally');
+                    while (filtered.length < 20) {
+                      filtered.push({ name: '', affiliation: '', initiative: null, conditions: [] });
+                    }
+                    return filtered;
+                  });
+                  setRowVisibility(prev => {
+                    let filtered = filteredIndices.map(i => prev[i]);
+                    while (filtered.length < 20) {
+                      filtered.push(false);
+                    }
+                    return filtered;
+                  });
+                  setOverlayActive(prev => {
+                    let filtered = filteredIndices.map(i => prev[i]);
+                    while (filtered.length < 20) {
+                      filtered.push(false);
+                    }
+                    return filtered;
+                  });
+                }
+
+                if (removePlayers) {
+                  let filteredIndices = rowData
+                    .map((row, i) => row.affiliation !== 'Player Character' ? i : null)
+                    .filter(i => i !== null);
+
+                  setRowData(prev => {
+                    let filtered = prev.filter(row => row.affiliation !== 'Player Character');
+                    while (filtered.length < 20) {
+                      filtered.push({ name: '', affiliation: '', initiative: null, conditions: [] });
+                    }
+                    return filtered;
+                  });
+                  setRowVisibility(prev => {
+                    let filtered = filteredIndices.map(i => prev[i]);
+                    while (filtered.length < 20) {
+                      filtered.push(false);
+                    }
+                    return filtered;
+                  });
+                  setOverlayActive(prev => {
+                    let filtered = filteredIndices.map(i => prev[i]);
+                    while (filtered.length < 20) {
+                      filtered.push(false);
+                    }
+                    return filtered;
+                  });
+                }
+                setIsSettingsModalOpen(false);
+              }
+              resetSettingsCheckboxes(); // <-- Add this line
+            }}
+          >
+            <div className="settings-checkbox-group">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={resetRound}
+                  onChange={e => setResetRound(e.target.checked)}
+                />
+                Reset Round Count to 0
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={removeAllConditions}
+                  onChange={e => setRemoveAllConditions(e.target.checked)}
+                />
+                Remove All Conditions
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={removeNeutral}
+                  onChange={e => setRemoveNeutral(e.target.checked)}
+                />
+                Remove Neutral/Environment
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={removeEnemies}
+                  onChange={e => setRemoveEnemies(e.target.checked)}
+                />
+                Remove Enemies
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={removeAllies}
+                  onChange={e => setRemoveAllies(e.target.checked)}
+                />
+                Remove Allies
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={removePlayers}
+                  onChange={e => setRemovePlayers(e.target.checked)}
+                />
+                Remove Player Characters
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={fullReset}
+                  onChange={e => setFullReset(e.target.checked)}
+                />
+                Full Reset (Remove Everything)
+              </label>
+            </div>
+            <div className="modal-button-group" style={{ marginTop: 16 }}>
+            <button type="submit" className="settings-submit-button">Submit</button>
             <button
-            className="settings-action-button"
-            onClick={handleNewCombat}
-          >
-            New Combat
-          </button>
-          <div className="settings-description-text new-combat-description-text">
-            • Changes the Round count to 0 <br></br> • Resets all conditions <br></br> • Removes all characters (except for player characters)
+              type="button"
+              className="close-modal-button"
+              onClick={() => {
+                setIsSettingsModalOpen(false);
+                resetSettingsCheckboxes(); // <-- Add this line
+              }}
+            >
+              X
+            </button>
           </div>
+        </form>
         </div>
-        <div className="full-reset-button-and-description">          
-          <button
-            className="settings-action-button"
-            onClick={handleFullReset}
-          >
-            Full Reset
-          </button>
-          <div className="settings-description-text full-reset-description-text">
-            • Changes the Round count to 0 <br></br> • Resets all conditions <br></br> • Removes all characters
-          </div>
-        </div>
-        <button
-          className="close-modal-button"
-          onClick={() => setIsSettingsModalOpen(false)}
-        >
-          X
-        </button>
       </div>
-    </div>
-  )}
+    )}
 
     <div className="wrapper">
       <div className="container">

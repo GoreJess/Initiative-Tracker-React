@@ -44,15 +44,15 @@ const resetSettingsCheckboxes = () => {
   const [affiliation, setAffiliation] = useState('');
 
   const [rowVisibility, setRowVisibility] = useState(
-    Array(20).fill(false).map((_, index) => index === 0)
+    Array(30).fill(false).map((_, index) => index === 0)
   );
 
   const [overlayActive, setOverlayActive] = useState(
-    Array(20).fill(false).map((_, index) => index === 0)
+    Array(30).fill(false).map((_, index) => index === 0)
   );
 
   const [rowData, setRowData] = useState(
-    Array(20).fill({ name: '', affiliation: '', initiative: null, conditions: [] })
+    Array(30).fill({ name: '', affiliation: '', initiative: null, conditions: [] })
   );
 
 
@@ -174,7 +174,7 @@ const resetSettingsCheckboxes = () => {
     }));
 
     // Fill up to 20 rows with empty slots if needed
-    while (updatedData.length < 20) {
+    while (updatedData.length < 30) {
       updatedData.push({ name: '', affiliation: '', initiative: null, conditions: [] });
       updatedVisibility.push(
         updatedData.length === 1
@@ -207,16 +207,16 @@ const resetSettingsCheckboxes = () => {
 
   const handleFullReset = () => {
     setRowData(
-      Array(20).fill({ name: '', affiliation: '', initiative: null, conditions: [] })
+      Array(30).fill({ name: '', affiliation: '', initiative: null, conditions: [] })
     );
-    setRowVisibility(Array(20).fill(false).map((_, idx) => idx === 0));
-    setOverlayActive(Array(20).fill(false).map((_, idx) => idx === 0));
+    setRowVisibility(Array(30).fill(false).map((_, idx) => idx === 0));
+    setOverlayActive(Array(30).fill(false).map((_, idx) => idx === 0));
     setRound(0);
     setShiftedRowIndex(null);
     setViewCharacterIndex(null);
     setIsSettingsModalOpen(false); // Close the modal
   };
-    
+
   const handleCloseAddConditionModal = () => {
     setIsAddConditionModalOpen(null); // Close the add-condition modal
     setSelectedConditions([]);        // Deselect all conditions
@@ -342,7 +342,7 @@ const resetSettingsCheckboxes = () => {
         let nextRowIndex = null;
     
         // Find the next row to shift
-        if (currentRowIndex === -1 || currentRowIndex === sortedRows.length - 1) {
+        if (currentRowIndex === -1 || currentRowIndex >= sortedRows.length - 1) {
           // If no row is shifted or the last row is shifted, start from the first row
           nextRowIndex = 0;
         } else {
@@ -375,6 +375,8 @@ const resetSettingsCheckboxes = () => {
       if (currentRowIndex === -1 || currentRowIndex === 0) {
         // If no row is shifted or the first row is shifted, move to the last row
         previousRowIndex = sortedRows.length - 1;
+      } else if (currentRowIndex >= sortedRows.length) {
+        previousRowIndex = sortedRows.length - 1;
       } else {
         // Otherwise, find the previous row in the sorted order
         previousRowIndex = currentRowIndex - 1;
@@ -396,7 +398,9 @@ const resetSettingsCheckboxes = () => {
     setTimeout(() => {
       const initiativeListElement = document.getElementsByClassName('initiative-list-content')[0];
         const shiftedRowElement = initiativeListElement.querySelector('.shifted-row');
-        shiftedRowElement.scrollIntoView({behavior: "smooth", block: "center"});
+        if (shiftedRowElement) {
+          shiftedRowElement.scrollIntoView({behavior: "smooth", block: "center"});
+        }
     }, 0)
   }
   
@@ -573,21 +577,21 @@ const resetSettingsCheckboxes = () => {
 
                   setRowData(prev => {
                     let filtered = prev.filter(row => row.affiliation !== 'Neutral/Environmental');
-                    while (filtered.length < 20) {
+                    while (filtered.length < 30) {
                       filtered.push({ name: '', affiliation: '', initiative: null, conditions: [] });
                     }
                     return filtered;
                   });
                   setRowVisibility(prev => {
                     let filtered = filteredIndices.map(i => prev[i]);
-                    while (filtered.length < 20) {
+                    while (filtered.length < 30) {
                       filtered.push(false);
                     }
                     return filtered;
                   });
                   setOverlayActive(prev => {
                     let filtered = filteredIndices.map(i => prev[i]);
-                    while (filtered.length < 20) {
+                    while (filtered.length < 30) {
                       filtered.push(false);
                     }
                     return filtered;
@@ -600,21 +604,21 @@ const resetSettingsCheckboxes = () => {
 
                   setRowData(prev => {
                     let filtered = prev.filter(row => row.affiliation !== 'Enemy');
-                    while (filtered.length < 20) {
+                    while (filtered.length < 30) {
                       filtered.push({ name: '', affiliation: '', initiative: null, conditions: [] });
                     }
                     return filtered;
                   });
                   setRowVisibility(prev => {
                     let filtered = filteredIndices.map(i => prev[i]);
-                    while (filtered.length < 20) {
+                    while (filtered.length <30) {
                       filtered.push(false);
                     }
                     return filtered;
                   });
                   setOverlayActive(prev => {
                     let filtered = filteredIndices.map(i => prev[i]);
-                    while (filtered.length < 20) {
+                    while (filtered.length < 30) {
                       filtered.push(false);
                     }
                     return filtered;
@@ -627,21 +631,21 @@ const resetSettingsCheckboxes = () => {
 
                   setRowData(prev => {
                     let filtered = prev.filter(row => row.affiliation !== 'Ally');
-                    while (filtered.length < 20) {
+                    while (filtered.length < 30) {
                       filtered.push({ name: '', affiliation: '', initiative: null, conditions: [] });
                     }
                     return filtered;
                   });
                   setRowVisibility(prev => {
                     let filtered = filteredIndices.map(i => prev[i]);
-                    while (filtered.length < 20) {
+                    while (filtered.length < 30) {
                       filtered.push(false);
                     }
                     return filtered;
                   });
                   setOverlayActive(prev => {
                     let filtered = filteredIndices.map(i => prev[i]);
-                    while (filtered.length < 20) {
+                    while (filtered.length < 30) {
                       filtered.push(false);
                     }
                     return filtered;
@@ -655,21 +659,21 @@ const resetSettingsCheckboxes = () => {
 
                   setRowData(prev => {
                     let filtered = prev.filter(row => row.affiliation !== 'Player Character');
-                    while (filtered.length < 20) {
+                    while (filtered.length < 30) {
                       filtered.push({ name: '', affiliation: '', initiative: null, conditions: [] });
                     }
                     return filtered;
                   });
                   setRowVisibility(prev => {
                     let filtered = filteredIndices.map(i => prev[i]);
-                    while (filtered.length < 20) {
+                    while (filtered.length < 30) {
                       filtered.push(false);
                     }
                     return filtered;
                   });
                   setOverlayActive(prev => {
                     let filtered = filteredIndices.map(i => prev[i]);
-                    while (filtered.length < 20) {
+                    while (filtered.length < 30) {
                       filtered.push(false);
                     }
                     return filtered;
@@ -678,6 +682,7 @@ const resetSettingsCheckboxes = () => {
                 setIsSettingsModalOpen(false);
               }
               resetSettingsCheckboxes(); // <-- Add this line
+              setShiftedRowIndex(0);
             }}
           >
             <div className="settings-checkbox-group">
